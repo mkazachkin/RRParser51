@@ -1,13 +1,13 @@
 Option Compare Database
 Public Function ParsXMLNums051(ByVal tblName As String, ByVal tblKeyName As String, ByVal tblKeyValue As String, ByVal cadNum As String, ByVal numsNode As Object) As String
-    'РџРѕР»СѓС‡Р°РµРј
-    '   tblName - РЅР°Р·РІР°РЅРёРµ РѕСЃРЅРѕРІРЅРѕР№ С‚Р°Р±Р»РёС†С‹ РѕР±СЉРµРєС‚Р°
-    '   tblKeyName - РЅР°Р·РІР°РЅРёРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° РѕР±СЉРµРєС‚Р°
-    '   tblKeyValue - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р°
-    '   cadNum - РєР°РґР°СЃС‚СЂРІРѕС‹Р№ РЅРѕРјРµСЂ РѕР±СЉРµРєС‚Р°
-    '   РЎСЃС‹Р»РєР° РЅР° СѓР·РµР» XML
+    'Получаем
+    '   tblName - название основной таблицы объекта
+    '   tblKeyName - название идентификатора объекта
+    '   tblKeyValue - идентификатор объекта
+    '   cadNum - кадастрвоый номер объекта
+    '   Ссылка на узел XML
     ' ------------------------
-    ' ----- РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ -----
+    ' ----- Конфигурация -----
     ' ------------------------
     Dim nDBFields(3) As String
         nDBFields(0) = "ChildCadastralNumber"
@@ -16,12 +16,12 @@ Public Function ParsXMLNums051(ByVal tblName As String, ByVal tblKeyName As Stri
         nDBFields(3) = "Reserved"
     Dim sqlStr As String
     ' ---------------------------------
-    ' ----- РџР°СЂСЃРёРЅРі Рё Р·Р°РїРёСЃСЊ РІ Р‘Р” -----
+    ' ----- Парсинг и запись в БД -----
     ' ---------------------------------
     Set numsChild = numsNode.FirstChild
     Set insertDB = CurrentDb
     While (Not numsChild Is Nothing)
-        'Р­С‚Рѕ РїСЂРѕСЃС‚Рѕ СЃРїРёСЃРѕРє. РџРѕСЌС‚РѕРјСѓ РєР°Р¶РґСѓСЋ Р·Р°РїРёСЃСЊ СЃСЂР°Р·Сѓ РїРёС€РµРј РІ Р‘Р” СЃ РїСЂРёРІСЏР·РєРѕР№ Рє РѕСЃРЅРѕРІРЅРѕРјСѓ РѕР±СЉРµРєС‚СѓРєС‚Сѓ
+        'Это просто список. Поэтому каждую запись сразу пишем в БД с привязкой к основному объектукту
         sqlStr = "insert into " & tblName & "(" & nDBFields(0) & "," & nDBFields(1) & "," & nDBFields(2)
         sqlStr = sqlStr & ") values ("
         sqlStr = sqlStr & "'" & numsChild.Text & "'," & tblKeyValue & ",'" & cadNum & "');"

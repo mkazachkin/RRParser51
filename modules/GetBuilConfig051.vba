@@ -1,7 +1,7 @@
 Option Compare Database
 Public Function GetBuilConfig051 (xmlOrdb As Boolean) As String()
-    Dim conf1 (26), conf2 (26) As String
-    'XML С‚РµРіРё                                         'РџРѕР»СЏ РІ Р‘Р”
+    Dim conf0 (26), conf1 (26) As String
+    'XML теги                                         'Поля в БД
     conf0(0) = "CadastralNumber"                    : conf1(0) = "CadastralNumber"
     conf0(1) = "DateCreated"                        : conf1(1) = "DatesCreated"
     conf0(2) = "FoundationDate"                     : conf1(2) = "FoundationDates"
@@ -35,15 +35,15 @@ End Function
 Public Function GetBuilTypes051 () As Boolean()
     Dim conf (26) As Boolean
     Dim i As Integer;
-    'Р’СЃРµ СЃС‚СЂРѕРєРё
+    'Все строки
     For i = 0 To 26
         conf (i) = true
     Next i
-    'РСЃРєР»СЋС‡Р°СЏ addr_id
+    'Исключая addr_id
     conf (19) = false
-    'РСЃРєР»СЋС‡Р°СЏ id
+    'Исключая id
     conf (25) = false
-    'РСЃРєР»СЋС‡Р°СЏ Reserved
+    'Исключая Reserved
     conf (26) = false
     getAddrTypes = conf
 End Function

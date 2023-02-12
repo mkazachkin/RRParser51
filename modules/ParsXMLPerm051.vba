@@ -1,13 +1,13 @@
 Option Compare Database
 Public Function ParsXMLPerm051(ByVal tblName As String, ByVal tblKeyName As String, ByVal tblKeyValue As String, ByVal cadNum As String, ByVal permNode As Object) As String
-    'РџРѕР»СѓС‡Р°РµРј
-    '   tblName - РЅР°Р·РІР°РЅРёРµ РѕСЃРЅРѕРІРЅРѕР№ С‚Р°Р±Р»РёС†С‹ РѕР±СЉРµРєС‚Р°
-    '   tblKeyName - РЅР°Р·РІР°РЅРёРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° РѕР±СЉРµРєС‚Р°
-    '   tblKeyValue - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р°
-    '   cadNum - РєР°РґР°СЃС‚СЂРІРѕС‹Р№ РЅРѕРјРµСЂ РѕР±СЉРµРєС‚Р°
-    '   РЎСЃС‹Р»РєР° РЅР° СѓР·РµР» XML
+    'Получаем
+    '   tblName - название основной таблицы объекта
+    '   tblKeyName - название идентификатора объекта
+    '   tblKeyValue - идентификатор объекта
+    '   cadNum - кадастрвоый номер объекта
+    '   Ссылка на узел XML
     ' ------------------------
-    ' ----- РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ -----
+    ' ----- Конфигурация -----
     ' ------------------------
     Dim pDBFields(3) As String
         pDBFields(0) = "ObjectPermittedUses"
@@ -16,12 +16,12 @@ Public Function ParsXMLPerm051(ByVal tblName As String, ByVal tblKeyName As Stri
         pDBFields(3) = "Reserved"
     Dim sqlStr As String
     ' ---------------------------------
-    ' ----- РџР°СЂСЃРёРЅРі Рё Р·Р°РїРёСЃСЊ РІ Р‘Р” -----
+    ' ----- Парсинг и запись в БД -----
     ' ---------------------------------
     Set permChild = permNode.FirstChild
     Set insertDB = CurrentDb
     While (Not permChild Is Nothing)
-        'Р­С‚Рѕ РїСЂРѕСЃС‚Рѕ СЃРїРёСЃРѕРє. РџРѕСЌС‚РѕРјСѓ РєР°Р¶РґСѓСЋ Р·Р°РїРёСЃСЊ СЃСЂР°Р·Сѓ РїРёС€РµРј РІ Р‘Р” СЃ РїСЂРёРІСЏР·РєРѕР№ Рє РѕСЃРЅРѕРІРЅРѕРјСѓ РѕР±СЉРµРєС‚Сѓ
+        'Это просто список. Поэтому каждую запись сразу пишем в БД с привязкой к основному объекту
         sqlStr = "insert into " & tblName & "(" & pDBFields(0) & "," & pDBFields(1) & "," & pDBFields(2)
         sqlStr = sqlStr & ") values ("
         sqlStr = sqlStr & "'" & permChild.Text & "'," & tblKeyValue & ",'" & cadNum & "');"
