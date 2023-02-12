@@ -5,7 +5,7 @@ Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As Stri
     '   tblKeyName - название идентификатора XML
     '   tblKeyValue - идентификатор XML
     '   cadNum - кадастрвоый номер объекта
-    '   Ссылка на узел XML CadastralNumber
+    '   Ссылка на узел XML
     ' ------------------------
     ' ----- Конфигурация -----
     ' ------------------------

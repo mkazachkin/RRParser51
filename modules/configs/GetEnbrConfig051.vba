@@ -1,7 +1,7 @@
 Option Compare Database
 Public Function GetEnbrConfig051 (xmlOrdb As Boolean) As String()
     Dim conf0 (9), conf1 (9) As String
-    'XML С‚РµРіРё                     'РџРѕР»СЏ РІ Р‘Р”
+    'XML теги                     'Поля в БД
     conf0(0) = "Name"           : conf1(0) = "Names"
     conf0(1) = "Type"           : conf1(1) = "Type"
     conf0(2) = "Registration"   : conf1(2) = "RightNumber"
@@ -16,13 +16,13 @@ End Function
 Public Function GetEnbrTypes051 () As Boolean()
     Dim conf (7) As Boolean
     Dim i As Integer;
-    'Р’СЃРµ СЃС‚СЂРѕРєРё
+    'Все строки
     For i = 0 To 7
         conf (i) = true
     Next i
-    'РСЃРєР»СЋС‡Р°СЏ id
+    'Исключая id
     conf (5) = false
-    'РСЃРєР»СЋС‡Р°СЏ Reserved
+    'Исключая Reserved
     conf (7) = false
     GetEnbrTypes051 = conf
 End Function

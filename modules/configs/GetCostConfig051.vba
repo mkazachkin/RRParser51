@@ -1,7 +1,7 @@
 Option Compare Database
 Public Function GetCostConfig051 (xmlOrdb As Boolean) As String()
     Dim conf0 (10), conf1 (10) As String
-    'XML С‚РµРіРё                                 'РџРѕР»СЏ РІ Р‘Р”
+    'XML теги                                 'Поля в БД
     conf0(0) = "CadastralCost"              : conf1(0) = "CadastralCost"
     conf0(1) = "DateValuation"              : conf1(1) = "DatesValuation"
     conf0(2) = "DateEntering"               : conf1(2) = "DatesEntering"
@@ -19,13 +19,13 @@ End Function
 Public Function GetCostTypes051 () As Boolean()
     Dim conf (10) As Boolean
     Dim i As Integer;
-    'Р’СЃРµ СЃС‚СЂРѕРєРё
+    'Все строки
     For i = 0 To 10
         conf (i) = true
     Next i
-    'РСЃРєР»СЋС‡Р°СЏ id
+    'Исключая id
     conf (8) = false
-    'РСЃРєР»СЋС‡Р°СЏ Reserved
+    'Исключая Reserved
     conf (10) = false
     GetCostTypes051 = conf
 End Function

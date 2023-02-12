@@ -1,43 +1,43 @@
 Option Compare Database
 Public Function ParsXMLEnbr051(ByVal tblName As String, ByVal tblKeyName As String, ByVal tblKeyValue As String, ByVal cadNum As String, ByVal enbrNode As Object) As String
-    'РџРѕР»СѓС‡Р°РµРј
-    '   tblName - РЅР°Р·РІР°РЅРёРµ РѕСЃРЅРѕРІРЅРѕР№ С‚Р°Р±Р»РёС†С‹ РѕР±СЉРµРєС‚Р°
-    '   tblKeyName - РЅР°Р·РІР°РЅРёРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° РѕР±СЉРµРєС‚Р°
-    '   tblKeyValue - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р°
-    '   cadNum - РєР°РґР°СЃС‚СЂРІРѕС‹Р№ РЅРѕРјРµСЂ РѕР±СЉРµРєС‚Р°
-    '   РЎСЃС‹Р»РєР° РЅР° СѓР·РµР» XML Documents
+    'Получаем
+    '   tblName - название основной таблицы объекта
+    '   tblKeyName - название идентификатора объекта
+    '   tblKeyValue - идентификатор объекта
+    '   cadNum - кадастрвоый номер объекта
+    '   Ссылка на узел XML Documents
     ' ------------------------
-    ' ----- РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ -----
+    ' ----- Конфигурация -----
     ' ------------------------
-    'РџРѕР»СѓС‡Р°РµРј С‚РµРіРё
+    'Получаем теги
     Dim enbrXMLTags(7) As String
         enbrXMLTags = GetEnbrConfig051(true)
-    'РџРѕР»СѓС‡Р°РµРј РїРѕР»СЏ Р‘Р”
+    'Получаем поля БД
     Dim enbrDBFields(7) As String
         enbrDBFields = GetEnbrConfig051(false)
         enbrDBFields(5) = tblKeyName
     Dim enbrDBValues(7) As String
-    'РџРѕР»СѓС‡Р°РµРј С‚РёРїС‹ РґР°РЅРЅС‹С…
+    'Получаем типы данных
     Dim enbrDBTypes(7) As Boolean
-    'РЎР»СѓР¶РµР±РЅРѕРµ
+    'Служебное
     Dim i As Integer
     Dim enbr_id As String
     Dim sqlStr As String
     ' -------------------
-    ' ----- РџР°СЂСЃРёРЅРі -----
+    ' ----- Парсинг -----
     ' -------------------
-    'Р”РІР° РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… РїРѕР»СЏ РїСЂРёС…РѕРґСЏС‚ СЃРЅР°СЂСѓР¶Рё
+    'Два дополнительных поля приходят снаружи
     enbrDBValues(5) = tblKeyValue
     enbrDBValues(6) = cadNum
     Set enbrNode = enbrNode.FirstChild
     While (Not enbrNode Is Nothing)
-        'Р—Р°СЂРµР·РµСЂРІРёСЂСѓРµРј Рё РїРѕР»СѓС‡РёРј id Р±СѓРґСѓС‰РµР№ Р·Р°РїРёСЃРё
+        'Зарезервируем и получим id будущей записи
         enbr_id = ReserveID(tblName, "enbr_id")
         enbrDBValues(7) = "null"
-        'РџР°СЂСЃРёРј
+        'Парсим
         Set enbrChild = enbrNode.FirstChild
         While (Not enbrChild Is Nothing)
-            'РџР°СЂСЃРёРј Р·РЅР°С‡РµРЅРёСЏ
+            'Парсим значения
             If (enbrChild.NodeName = enbrXMLTags(0)) Then enbrDBValues(0) = enbrChild.Text
             If (enbrChild.NodeName = enbrXMLTags(1)) Then enbrDBValues(1) = enbrChild.Text
             If (enbrChild.NodeName = enbrXMLTags(2)) Then
@@ -48,19 +48,19 @@ Public Function ParsXMLEnbr051(ByVal tblName As String, ByVal tblKeyName As Stri
                     Set subb = subb.NextSibling
                 Wend
             End If
-            'РџР°СЂСЃРёРј РѕРґРёРЅ С‚РёРї
+            'Парсим один тип
             If (enbrChild.NodeName = enbrXMLTags(4)) Then enbrDBValues(4) = ParsXMLDocs051(tblName & "_docs", "enbr_id", enbr_id, cadNum, enbrChild)
             Set enbrChild = enbrChild.NextSibling
         Wend
-        'РћР±СЂР°Р±Р°С‚С‹РІР°РµРј СЃС‚СЂРѕРєРё РІ РґР°РЅРЅС‹С…
+        'Обрабатываем строки в данных
         For i = 0 To 6
             If enbrDBTypes(i) Then enbrDBValues(i) = "{$}" & enbrDBValues(i) & "{$}"
         Next i
-        'Р”РѕР±Р°РІР»СЏРµРј Р·Р°РїСЏС‚С‹Рµ
+        'Добавляем запятые
         For i = 0 To 5
             enbrDBValues(i) = enbrDBValues(i) & ","
         Next i
-        'Р“РѕС‚РѕРІРёРј Р·Р°РїСЂРѕСЃ РЅР° РґРѕР±Р°РІР»РµРЅРёРµ РґР°РЅРЅС‹С…
+        'Готовим запрос на добавление данных
         sqlStr = "update " & tblName & " set "
         For i = 0 To 6
             sqlStr = sqlStr & enbrDBFields(i) & "=" & enbrDBValues(i)
