@@ -19,7 +19,7 @@ Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As Stri
     'Инициализируем значения
     Dim builDBValues(26)
     'Получаем типы данных
-    Dim builDBTypes(26) As String
+    Dim builDBTypes(26) As Boolean
         builDBTypes = GetBuilTypes051()
     'Служебное
     Dim i As Integer

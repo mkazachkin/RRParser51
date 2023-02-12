@@ -14,7 +14,7 @@ Public Function ParsXMLAddr051(ByVal addrNode As Object) As String
     'Инициализируем значения
     Dim addrDBValues(33) As String
     'Получаем типы данных
-    Dim addrDBTypes(33) As String
+    Dim addrDBTypes(33) As Boolean
         addrDBTypes = GetAddrTypes051()
     'Задаем название таблицы адресов
     Dim tblName As String
