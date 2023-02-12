@@ -1,3 +1,4 @@
+Option Compare Database
 Public Function ParsXMLDocs051(ByVal tblName As String, ByVal tblKeyName As String, ByVal tblKeyValue As String, ByVal cadNum As String, ByVal docsNode As Object) As String
     'Получаем
     '   tblName - название основной таблицы объекта
@@ -17,7 +18,7 @@ Public Function ParsXMLDocs051(ByVal tblName As String, ByVal tblKeyName As Stri
         docsDBFields(7) = tblKeyName
     Dim docsDBValues(9) As String
     'Получаем типы данных
-    Dim docsDBTypes(9) As String
+    Dim docsDBTypes(9) As Boolean
         docsDBTypes = GetDocsTypes051()
     'Служебное
     Dim i As Integer
@@ -47,7 +48,7 @@ Public Function ParsXMLDocs051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' -----------------------
     'Обрабатываем строки в данных
     For i = 0 To 8
-        If docsDBTypes(i) = "s" Then docsDBValues(i) = "{$}" & docsDBValues(i) & "{$}"
+        If docsDBTypes(i) Then docsDBValues(i) = "{$}" & docsDBValues(i) & "{$}"
     Next i
     'Добавляем запятые
     For i = 0 To 7
