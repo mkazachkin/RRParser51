@@ -1,64 +1,64 @@
 Option Compare Database
 Public Function ParsXMLSubb051(ByVal tblName As String, ByVal tblKeyName As String, ByVal tblKeyValue As String, ByVal cadNum As String, ByVal subbNode As Object) As String
-    'Получаем
-    '   tblName - название основной таблицы объекта
-    '   tblKeyName - название идентификатора объекта
-    '   tblKeyValue - идентификатор объекта
-    '   cadNum - кадастрвоый номер объекта
-    '   Ссылка на узел XML Documents
+    'РџРѕР»СѓС‡Р°РµРј
+    '   tblName - РЅР°Р·РІР°РЅРёРµ РѕСЃРЅРѕРІРЅРѕР№ С‚Р°Р±Р»РёС†С‹ РѕР±СЉРµРєС‚Р°
+    '   tblKeyName - РЅР°Р·РІР°РЅРёРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° РѕР±СЉРµРєС‚Р°
+    '   tblKeyValue - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р°
+    '   cadNum - РєР°РґР°СЃС‚СЂРІРѕС‹Р№ РЅРѕРјРµСЂ РѕР±СЉРµРєС‚Р°
+    '   РЎСЃС‹Р»РєР° РЅР° СѓР·РµР» XML Documents
     ' ------------------------
-    ' ----- Конфигурация -----
+    ' ----- РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ -----
     ' ------------------------
-    'Получаем теги
+    'РџРѕР»СѓС‡Р°РµРј С‚РµРіРё
     Dim subbXMLTags(6) As String
         subbXMLTags = GetSubbConfig051(true)
-    'Получаем поля БД
+    'РџРѕР»СѓС‡Р°РµРј РїРѕР»СЏ Р‘Р”
     Dim subbDBFields(6) As String
         subbXMLTags = GetSubbConfig051(false)
         subbDBFields(4) = tblKeyName
     Dim subbDBValues(6) As String
-    'Получаем типы данных
+    'РџРѕР»СѓС‡Р°РµРј С‚РёРїС‹ РґР°РЅРЅС‹С…
     Dim subbDBTypes(6) As Boolean
         subbDBTypes = GetSubbTypes051()
-    'Служебное
+    'РЎР»СѓР¶РµР±РЅРѕРµ
     Dim i As Integer
     Dim subb_id As String
     Dim sqlStr As String
     ' -------------------
-    ' ----- Парсинг -----
+    ' ----- РџР°СЂСЃРёРЅРі -----
     ' -------------------
-    'Два дополнительных поля приходят снаружи
+    'Р”РІР° РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… РїРѕР»СЏ РїСЂРёС…РѕРґСЏС‚ СЃРЅР°СЂСѓР¶Рё
     subbDBValues(4) = tblKeyValue
     subbDBValues(5) = cadNum
     Set builChild = subbNode.FirstChild
     Set insertDB = CurrentDb
     While (Not builChild Is Nothing)
-        'Зарезервируем и получим id будущей записи
+        'Р—Р°СЂРµР·РµСЂРІРёСЂСѓРµРј Рё РїРѕР»СѓС‡РёРј id Р±СѓРґСѓС‰РµР№ Р·Р°РїРёСЃРё
         subb_id = ReserveID(tblName, "subb_id")
         subbDBValues(6) = "null"
         If builChild.getAttribute("NumberRecord") <> nill Then subbDBValues(0) = builChild.getAttribute("NumberRecord")
         If builChild.getAttribute("DateCreated") <> nill Then subbDBValues(1) = builChild.getAttribute("DateCreated")
-        'Парсим
+        'РџР°СЂСЃРёРј
         Set subbChild = builChild.FirstChild
         While (Not subbChild Is Nothing)
-            'Парсим значения
+            'РџР°СЂСЃРёРј Р·РЅР°С‡РµРЅРёСЏ
             If (subbChild.NodeName = subbXMLTags(2)) Then subbDBValues(2) = Replace(subbChild.Text, ".", ",")
-            'Парсим один тип
+            'РџР°СЂСЃРёРј РѕРґРёРЅ С‚РёРї
             If (subbChild.NodeName = subbXMLTags(3)) Then subbDBValues(3) = ParsXMLEnbr051(tblName & "_enbr", "subb_id", subb_id, cadNum, subbChild)
             Set subbChild = subbChild.NextSibling
         Wend
         ' -----------------------
-        ' ----- Запись в БД -----
+        ' ----- Р—Р°РїРёСЃСЊ РІ Р‘Р” -----
         ' -----------------------
-        'Обрабатываем строки в данных
+        'РћР±СЂР°Р±Р°С‚С‹РІР°РµРј СЃС‚СЂРѕРєРё РІ РґР°РЅРЅС‹С…
         For i = 0 To 5
             If subbDBTypes(i) Then subbDBValues(i) = "{$}" & subbDBValues(i) & "{$}"
         Next i
-        'Добавляем запятые
+        'Р”РѕР±Р°РІР»СЏРµРј Р·Р°РїСЏС‚С‹Рµ
         For i = 0 To 4
             subbDBValues(i) = subbDBValues(i) & ","
         Next i
-        'Готовим запрос на добавление данных
+        'Р“РѕС‚РѕРІРёРј Р·Р°РїСЂРѕСЃ РЅР° РґРѕР±Р°РІР»РµРЅРёРµ РґР°РЅРЅС‹С…
         sqlStr = "update " & tblName & " set "
         For i = 0 To 5
             sqlStr = sqlStr & subbDBFields(i) & "=" & subbDBValues(i)

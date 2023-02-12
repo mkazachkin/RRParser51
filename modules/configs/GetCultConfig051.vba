@@ -1,7 +1,7 @@
 Option Compare Database
 Public Function GetCultConfig051 (xmlOrdb As Boolean) As String()
     Dim conf0 (10), conf1 (10) As String
-    'XML теги                     'Поля в БД
+    'XML С‚РµРіРё                         'РџРѕР»СЏ РІ Р‘Р”
     conf0(0) = "InclusionEGROKN"    : conf1(0) = "EGROKNRegNum"
     conf0(1) = ""                   : conf1(1) = "EGROKNObjCultural"
     conf0(2) = ""                   : conf1(2) = "EGROKNNameCultural"
@@ -18,13 +18,13 @@ End Function
 Public Function GetCultTypes051 () As Boolean()
     Dim conf (10) As Boolean
     Dim i As Integer;
-    'Все строки
+    'Р’СЃРµ СЃС‚СЂРѕРєРё
     For i = 0 To 10
         conf (i) = true
     Next i
-    'Исключая id
+    'РСЃРєР»СЋС‡Р°СЏ id
     conf (8) = false
-    'Исключая Reserved
+    'РСЃРєР»СЋС‡Р°СЏ Reserved
     conf (10) = false
     GetCultTypes051 = conf
 End Function

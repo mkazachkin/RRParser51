@@ -1,7 +1,7 @@
 Option Compare Database
 Public Function GetAddrConfig051 (xmlOrdb As Boolean) As String()
     Dim conf0 (33), conf1 (33) As String
-    'XML теги                         'Поля в БД
+    'XML С‚РµРіРё                         'РџРѕР»СЏ РІ Р‘Р”
     conf0(0) = "FIAS"               : conf1(0) = "FIAS"
     conf0(1) = "OKATO"              : conf1(1) = "OKATO"
     conf0(2) = "KLADR"              : conf1(2) = "KLADR"
@@ -42,13 +42,13 @@ End Function
 Public Function GetAddrTypes051 () As Boolean()
     Dim conf (33) As Boolean
     Dim i As Integer;
-    'Все строки
+    'Р’СЃРµ СЃС‚СЂРѕРєРё
     For i = 0 To 33
         conf (i) = true
     Next i
-    'Исключая regi_id
+    'РСЃРєР»СЋС‡Р°СЏ regi_id
     conf (6) = false
-    'Исключая Reserved
+    'РСЃРєР»СЋС‡Р°СЏ Reserved
     conf (33) = false
     GetAddrTypes051 = conf
 End Function

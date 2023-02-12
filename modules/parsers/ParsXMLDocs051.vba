@@ -1,60 +1,60 @@
 Option Compare Database
 Public Function ParsXMLDocs051(ByVal tblName As String, ByVal tblKeyName As String, ByVal tblKeyValue As String, ByVal cadNum As String, ByVal docsNode As Object) As String
-    'Получаем
-    '   tblName - название основной таблицы объекта
-    '   tblKeyName - название идентификатора объекта
-    '   tblKeyValue - идентификатор объекта
-    '   cadNum - кадастрвоый номер объекта
-    '   Ссылка на узел XML Documents
+    'РџРѕР»СѓС‡Р°РµРј
+    '   tblName - РЅР°Р·РІР°РЅРёРµ РѕСЃРЅРѕРІРЅРѕР№ С‚Р°Р±Р»РёС†С‹ РѕР±СЉРµРєС‚Р°
+    '   tblKeyName - РЅР°Р·РІР°РЅРёРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° РѕР±СЉРµРєС‚Р°
+    '   tblKeyValue - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р°
+    '   cadNum - РєР°РґР°СЃС‚СЂРІРѕС‹Р№ РЅРѕРјРµСЂ РѕР±СЉРµРєС‚Р°
+    '   РЎСЃС‹Р»РєР° РЅР° СѓР·РµР» XML Documents
     ' ------------------------
-    ' ----- Конфигурация -----
+    ' ----- РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ -----
     ' ------------------------
-    'Получаем теги
+    'РџРѕР»СѓС‡Р°РµРј С‚РµРіРё
     Dim docsXMLTags(9) As String
         docsXMLTags = GetDocsConfig051(true)
-    'Получаем поля БД
+    'РџРѕР»СѓС‡Р°РµРј РїРѕР»СЏ Р‘Р”
     Dim docsDBFields(9) As String
         docsDBFields =  GetDocsConfig051(false)
         docsDBFields(7) = tblKeyName
     Dim docsDBValues(9) As String
-    'Получаем типы данных
+    'РџРѕР»СѓС‡Р°РµРј С‚РёРїС‹ РґР°РЅРЅС‹С…
     Dim docsDBTypes(9) As Boolean
         docsDBTypes = GetDocsTypes051()
-    'Служебное
+    'РЎР»СѓР¶РµР±РЅРѕРµ
     Dim i As Integer
     Dim docs_id As String
     Dim sqlStr As String
     ' -------------------
-    ' ----- Парсинг -----
+    ' ----- РџР°СЂСЃРёРЅРі -----
     ' -------------------
-    'Два дополнительных поля приходят снаружи
+    'Р”РІР° РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… РїРѕР»СЏ РїСЂРёС…РѕРґСЏС‚ СЃРЅР°СЂСѓР¶Рё
     docsDBValues(7) = tblKeyValue
     docsDBValues(8) = cadNum
-    'Зарезервируем и получим id будущей записи
+    'Р—Р°СЂРµР·РµСЂРІРёСЂСѓРµРј Рё РїРѕР»СѓС‡РёРј id Р±СѓРґСѓС‰РµР№ Р·Р°РїРёСЃРё
     docs_id = ReserveID(tblName, "docs_id")
     docsDBValues(9) = "null"
-    'Парсим
+    'РџР°СЂСЃРёРј
     Set docsChild = docsNode.FirstChild
     While (Not docsChild Is Nothing)
-        'Парсим значения
+        'РџР°СЂСЃРёРј Р·РЅР°С‡РµРЅРёСЏ
         For i = 0 To 6
             If (docsChild.NodeName = docsXMLTags(i)) Then docsDBValues(i) = docsChild.Text
         Next i
-        'Типов нет, их парсить не надо
+        'РўРёРїРѕРІ РЅРµС‚, РёС… РїР°СЂСЃРёС‚СЊ РЅРµ РЅР°РґРѕ
         Set docsChild = docsChild.NextSibling
     Wend
     ' -----------------------
-    ' ----- Запись в БД -----
+    ' ----- Р—Р°РїРёСЃСЊ РІ Р‘Р” -----
     ' -----------------------
-    'Обрабатываем строки в данных
+    'РћР±СЂР°Р±Р°С‚С‹РІР°РµРј СЃС‚СЂРѕРєРё РІ РґР°РЅРЅС‹С…
     For i = 0 To 8
         If docsDBTypes(i) Then docsDBValues(i) = "{$}" & docsDBValues(i) & "{$}"
     Next i
-    'Добавляем запятые
+    'Р”РѕР±Р°РІР»СЏРµРј Р·Р°РїСЏС‚С‹Рµ
     For i = 0 To 7
         docsDBValues(i) = docsDBValues(i) & ","
     Next i
-    'Готовим запрос на добавление данных
+    'Р“РѕС‚РѕРІРёРј Р·Р°РїСЂРѕСЃ РЅР° РґРѕР±Р°РІР»РµРЅРёРµ РґР°РЅРЅС‹С…
     sqlStr = "update " & tblName & " set "
     For i = 0 To 8
         sqlStr = sqlStr & docsDBFields(i) & "=" & docsDBValues(i)

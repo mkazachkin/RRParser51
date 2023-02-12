@@ -1,40 +1,40 @@
 Option Compare Database
 Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As String, ByVal tblKeyValue As String, ByVal builNode As Object) As String
-    'Получаем
-    '   tblName - префикс таблиц XML
-    '   tblKeyName - название идентификатора XML
-    '   tblKeyValue - идентификатор XML
-    '   cadNum - кадастрвоый номер объекта
-    '   Ссылка на узел XML
+    'РџРѕР»СѓС‡Р°РµРј
+    '   tblName - РїСЂРµС„РёРєСЃ С‚Р°Р±Р»РёС† XML
+    '   tblKeyName - РЅР°Р·РІР°РЅРёРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° XML
+    '   tblKeyValue - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ XML
+    '   cadNum - РєР°РґР°СЃС‚СЂРІРѕС‹Р№ РЅРѕРјРµСЂ РѕР±СЉРµРєС‚Р°
+    '   РЎСЃС‹Р»РєР° РЅР° СѓР·РµР» XML
     ' ------------------------
-    ' ----- Конфигурация -----
+    ' ----- РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ -----
     ' ------------------------
-    'Получаем теги
+    'РџРѕР»СѓС‡Р°РµРј С‚РµРіРё
     Dim builXMLTags(26) As String
         builXMLTags = GetBuilConfig051 (true)
-    'Получаем поля БД
-    Dim builDBFields(26)
+    'РџРѕР»СѓС‡Р°РµРј РїРѕР»СЏ Р‘Р”
+    Dim builDBFields(26) As String
         builDBFields = GetBuilConfig051 (false)
         builDBFields(25) = tblKeyName
-    'Инициализируем значения
-    Dim builDBValues(26)
-    'Получаем типы данных
+    'РРЅРёС†РёР°Р»РёР·РёСЂСѓРµРј Р·РЅР°С‡РµРЅРёСЏ
+    Dim builDBValues(26) As String
+    'РџРѕР»СѓС‡Р°РµРј С‚РёРїС‹ РґР°РЅРЅС‹С…
     Dim builDBTypes(26) As Boolean
         builDBTypes = GetBuilTypes051()
-    'Служебное
+    'РЎР»СѓР¶РµР±РЅРѕРµ
     Dim i As Integer
     Dim buil_id As String
     Dim cadNum As String
     Dim sqlStr As String
     ' -------------------
-    ' ----- Парсинг -----
+    ' ----- РџР°СЂСЃРёРЅРі -----
     ' -------------------
-    'Одно поле приходит снаружи
+    'РћРґРЅРѕ РїРѕР»Рµ РїСЂРёС…РѕРґРёС‚ СЃРЅР°СЂСѓР¶Рё
     builDBValues(25) = tblKeyValue
-    'Зарезервируем и получим id будущей записи
+    'Р—Р°СЂРµР·РµСЂРІРёСЂСѓРµРј Рё РїРѕР»СѓС‡РёРј id Р±СѓРґСѓС‰РµР№ Р·Р°РїРёСЃРё
     buil_id = ReserveID(tblName, "buil_id")
     builDBValues(26) = "null"
-    'В качестве атрибутов узла приходят еще несколько полей
+    'Р’ РєР°С‡РµСЃС‚РІРµ Р°С‚СЂРёР±СѓС‚РѕРІ СѓР·Р»Р° РїСЂРёС…РѕРґСЏС‚ РµС‰Рµ РЅРµСЃРєРѕР»СЊРєРѕ РїРѕР»РµР№
     If builNode.getAttribute(builXMLTags(0)) <> nill Then
         builDBValues(0) = builNode.getAttribute(builXMLTags(0))
         cadNum = builDBValues(0)
@@ -47,11 +47,11 @@ Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As Stri
     End If
     Set builChild = builNode.FirstChild
     While (Not builChild Is Nothing)
-        'Парсим значения
+        'РџР°СЂСЃРёРј Р·РЅР°С‡РµРЅРёСЏ
         For i = 3 To 8
             If (builChild.NodeName = builXMLTags(i)) Then builDBValues(i) = builChild.Text
         Next i
-        'Парсим атрибуты
+        'РџР°СЂСЃРёРј Р°С‚СЂРёР±СѓС‚С‹
         If (builChild.NodeName = builXMLTags(9)) Then
             Set child = builChild.FirstChild
             If child.getAttribute("Wall") <> nill Then builDBValues(9) = child.getAttribute("Wall")
@@ -65,7 +65,7 @@ Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As Stri
             If builChild.getAttribute("Floors") <> nill Then builDBValues(12) = builChild.getAttribute("Floors")
             If builChild.getAttribute("UndergroundFloors") <> nill Then builDBValues(13) = builChild.getAttribute("UndergroundFloors")
         End If
-        'Парсим типы
+        'РџР°СЂСЃРёРј С‚РёРїС‹
         If (builChild.NodeName = builXMLTags(14)) Then builDBValues(14) = ParsXMLNums051(tblName & "_prnt", "buil_id", buil_id, cadNum, builChild)
         If (builChild.NodeName = builXMLTags(15)) Then builDBValues(15) = ParsXMLNums051(tblName & "_prev", "buil_id", buil_id, cadNum, builChild)
         If (builChild.NodeName = builXMLTags(16)) Then builDBValues(16) = ParsXMLNums051(tblName & "_flat", "buil_id", buil_id, cadNum, builChild)
@@ -81,19 +81,19 @@ Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As Stri
         Set builChild = builChild.NextSibling
     Wend
     ' -----------------------
-    ' ----- Запись в БД -----
+    ' ----- Р—Р°РїРёСЃСЊ РІ Р‘Р” -----
     ' -----------------------
-    'Area нужно отработать отдельно
+    'Area РЅСѓР¶РЅРѕ РѕС‚СЂР°Р±РѕС‚Р°С‚СЊ РѕС‚РґРµР»СЊРЅРѕ
     builDBValues(8) = Replace(builDBValues(8), ".", ",")
-    'Обрабатываем строки в данных
+    'РћР±СЂР°Р±Р°С‚С‹РІР°РµРј СЃС‚СЂРѕРєРё РІ РґР°РЅРЅС‹С…
     For i = 0 To 25
         If builDBTypes(i) Then builDBValues(i) = "{$}" & builDBValues(i) & "{$}"
     Next i
-    'Добавляем запятые
+    'Р”РѕР±Р°РІР»СЏРµРј Р·Р°РїСЏС‚С‹Рµ
     For i = 0 To 24
         builDBValues(i) = builDBValues(i) & ","
     Next i
-    'Готовим запрос на добавление данных
+    'Р“РѕС‚РѕРІРёРј Р·Р°РїСЂРѕСЃ РЅР° РґРѕР±Р°РІР»РµРЅРёРµ РґР°РЅРЅС‹С…
     sqlStr = "update " & tblName & " set "
     For i = 0 To 25
         sqlStr = sqlStr & builDBFields(i) & "=" & builDBValues(i)

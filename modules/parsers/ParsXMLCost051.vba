@@ -1,66 +1,66 @@
 Option Compare Database
 Public Function ParsXMLCost051(ByVal tblName As String, ByVal tblKeyName As String, ByVal tblKeyValue As String, ByVal cadNum As String, ByVal costNode As Object) As String
-    'Получаем
-    '   tblName - префикс таблиц XML
-    '   tblKeyName - название идентификатора XML
-    '   tblKeyValue - идентификатор XML
-    '   cadNum - кадастрвоый номер объекта
-    '   Ссылка на узел XML
+    'РџРѕР»СѓС‡Р°РµРј
+    '   tblName - РїСЂРµС„РёРєСЃ С‚Р°Р±Р»РёС† XML
+    '   tblKeyName - РЅР°Р·РІР°РЅРёРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° XML
+    '   tblKeyValue - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ XML
+    '   cadNum - РєР°РґР°СЃС‚СЂРІРѕС‹Р№ РЅРѕРјРµСЂ РѕР±СЉРµРєС‚Р°
+    '   РЎСЃС‹Р»РєР° РЅР° СѓР·РµР» XML
     ' ------------------------
-    ' ----- Конфигурация -----
+    ' ----- РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ -----
     ' ------------------------
-    'Получаем теги
+    'РџРѕР»СѓС‡Р°РµРј С‚РµРіРё
     Dim cdcsXMLTags(10) As String
         cdcsXMLTags = GetCostConfig051(true)
-    'Получаем поля БД
+    'РџРѕР»СѓС‡Р°РµРј РїРѕР»СЏ Р‘Р”
     Dim cdcsDBFields(10) As String
         cdcsDBFields = GetCostConfig051(false)
         cdcsDBFields(8) = tblKeyName
     Dim cdcsDBValues(10) As String
-    'Получаем типы данных
+    'РџРѕР»СѓС‡Р°РµРј С‚РёРїС‹ РґР°РЅРЅС‹С…
     Dim cdcsDBTypes(10) As Boolean
         cdcsDBTypes = GetCostTypes051()
-    'Служебное
+    'РЎР»СѓР¶РµР±РЅРѕРµ
     Dim i As Integer
     Dim cdcs_id As String
     Dim sqlStr As String
     ' -------------------
-    ' ----- Парсинг -----
+    ' ----- РџР°СЂСЃРёРЅРі -----
     ' -------------------
-    'Два дополнительных поля приходят снаружи
+    'Р”РІР° РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅС‹С… РїРѕР»СЏ РїСЂРёС…РѕРґСЏС‚ СЃРЅР°СЂСѓР¶Рё
     cdcsDBValues(8) = tblKeyValue
     cdcsDBValues(9) = cadNum
-    'Зарезервируем и получим id будущей записи
+    'Р—Р°СЂРµР·РµСЂРІРёСЂСѓРµРј Рё РїРѕР»СѓС‡РёРј id Р±СѓРґСѓС‰РµР№ Р·Р°РїРёСЃРё
     cdcs_id = ReserveID(tblName, "cdcs_id")
     cdcsDBValues(10) = "null"
-    'Кадастровая стоимость тоже приходит "снаружи"
+    'РљР°РґР°СЃС‚СЂРѕРІР°СЏ СЃС‚РѕРёРјРѕСЃС‚СЊ С‚РѕР¶Рµ РїСЂРёС…РѕРґРёС‚ "СЃРЅР°СЂСѓР¶Рё"
     If costNode.getAttribute("Value") <> nill Then
         cdcsDBValues(0) = Replace(costNode.getAttribute("Value"), ".", ",")
     End If
     Set costChild = costNode.FirstChild
     While (Not costChild Is Nothing)
-        'Парсим значения
+        'РџР°СЂСЃРёРј Р·РЅР°С‡РµРЅРёСЏ
         For i = 1 To 6
             If (costChild.NodeName = cdcsXMLTags(i)) Then cdcsDBValues(i) = costChild.Text
         Next i
-        'Парсим типы. Он тут у нас один
+        'РџР°СЂСЃРёРј С‚РёРїС‹. РћРЅ С‚СѓС‚ Сѓ РЅР°СЃ РѕРґРёРЅ
         If (costChild.NodeName = cdcsXMLTags(7)) Then
             cdcsDBValues(7) = ParsXMLDocs051(tblName & "_docs", "cdcs_id", cdcs_id, cadNum, costChild)
         End If
         Set costChild = costChild.NextSibling
     Wend
     ' -----------------------
-    ' ----- Запись в БД -----
+    ' ----- Р—Р°РїРёСЃСЊ РІ Р‘Р” -----
     ' -----------------------
-    'Обрабатываем строки в данных
+    'РћР±СЂР°Р±Р°С‚С‹РІР°РµРј СЃС‚СЂРѕРєРё РІ РґР°РЅРЅС‹С…
     For i = 0 To 9
         If cdcsDBTypes(i) Then cdcsDBValues(i) = "{$}" & cdcsDBValues(i) & "{$}"
     Next i
-    'Добавляем запятые
+    'Р”РѕР±Р°РІР»СЏРµРј Р·Р°РїСЏС‚С‹Рµ
     For i = 0 To 8
         cdcsDBValues(i) = cdcsDBValues(i) & ","
     Next i
-    'Готовим запрос на добавление данных
+    'Р“РѕС‚РѕРІРёРј Р·Р°РїСЂРѕСЃ РЅР° РґРѕР±Р°РІР»РµРЅРёРµ РґР°РЅРЅС‹С…
     sqlStr = "update " & tblName & " set "
     For i = 0 To 9
         sqlStr = sqlStr & cdcsDBFields(i) & "=" & cdcsDBValues(i)

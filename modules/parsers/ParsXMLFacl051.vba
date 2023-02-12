@@ -1,20 +1,20 @@
 Option Compare Database
 Public Function ParsXMLFacl051(ByVal tblName As String, ByVal tblKeyName As String, ByVal tblKeyValue As String, ByVal cadNum As String, ByVal faclNode As Object) As String
-    'Получаем
-    '   tblName - название основной таблицы объекта
-    '   tblKeyName - название идентификатора объекта
-    '   tblKeyValue - идентификатор объекта
-    '   cadNum - кадастрвоый номер объекта
-    '   Ссылка на узел XML Documents
+    'РџРѕР»СѓС‡Р°РµРј
+    '   tblName - РЅР°Р·РІР°РЅРёРµ РѕСЃРЅРѕРІРЅРѕР№ С‚Р°Р±Р»РёС†С‹ РѕР±СЉРµРєС‚Р°
+    '   tblKeyName - РЅР°Р·РІР°РЅРёРµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂР° РѕР±СЉРµРєС‚Р°
+    '   tblKeyValue - РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РѕР±СЉРµРєС‚Р°
+    '   cadNum - РєР°РґР°СЃС‚СЂРІРѕС‹Р№ РЅРѕРјРµСЂ РѕР±СЉРµРєС‚Р°
+    '   РЎСЃС‹Р»РєР° РЅР° СѓР·РµР» XML Documents
     ' ------------------------
-    ' ----- Конфигурация -----
+    ' ----- РљРѕРЅС„РёРіСѓСЂР°С†РёСЏ -----
     ' ------------------------
-    'Получаем теги
+    'РџРѕР»СѓС‡Р°РµРј С‚РµРіРё
     Dim faclXMLTags(2) As String
         faclXMLTags(0) = "CadastralNumber"
         faclXMLTags(1) = "Purpose"
         faclXMLTags(2) = "Name"
-    'Получаем поля БД
+    'РџРѕР»СѓС‡Р°РµРј РїРѕР»СЏ Р‘Р”
     Dim faclDBFields(5) As String
         faclDBFields(0) = "FacilityCadastralNumber"
         faclDBFields(1) = "Purpose"
@@ -22,11 +22,11 @@ Public Function ParsXMLFacl051(ByVal tblName As String, ByVal tblKeyName As Stri
         faclDBFields(3) = tblKeyName
         faclDBFields(4) = "CadastralNumber"
         faclDBFields(5) = "Reserved"
-    Dim faclDBValues(5)
-    'Служебное
+    Dim faclDBValues(5) As String
+    'РЎР»СѓР¶РµР±РЅРѕРµ
     Dim insertSQL As String
     ' -------------------
-    ' ----- Парсинг -----
+    ' ----- РџР°СЂСЃРёРЅРі -----
     ' -------------------
     faclDBValues(3) = tblKeyValue & ","
     faclDBValues(4) = "{$}" & cadNum & "{$});"
