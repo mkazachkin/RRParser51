@@ -5,7 +5,7 @@ Public Function ParsXMLDocs051(ByVal tblName As String, ByVal tblKeyName As Stri
     '   tblKeyName - название идентификатора объекта
     '   tblKeyValue - идентификатор объекта
     '   cadNum - кадастрвоый номер объекта
-    '   Ссылка на узел XML Documents
+    '   Ссылка на узел XML
     ' ------------------------
     ' ----- Конфигурация -----
     ' ------------------------
