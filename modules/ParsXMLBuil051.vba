@@ -10,7 +10,7 @@ Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Конфигурация -----
     ' ------------------------
     'Получаем теги
-    Dim builXMLTags(24) As String
+    Dim builXMLTags(26) As String
         builXMLTags = GetBuilConfig051 (true)
     'Получаем поля БД
     Dim builDBFields(26)

@@ -10,7 +10,7 @@ Public Function ParsXMLCost051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Конфигурация -----
     ' ------------------------
     'Получаем теги
-    Dim cdcsXMLTags(7) As String
+    Dim cdcsXMLTags(10) As String
         cdcsXMLTags = GetCostConfig051(true)
     'Получаем поля БД
     Dim cdcsDBFields(10) As String

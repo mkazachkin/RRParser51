@@ -29,7 +29,7 @@ Public Function GetBuilConfig051 (xmlOrdb As Boolean) As String()
     conf0(24) = "CulturalHeritage"                  : conf1(24) = "CulturalHeritage"
     conf0(25) = ""                                  : conf1(25) = ""
     conf0(26) = ""                                  : conf1(26) = "Reserved"
-    If xmlOrdb GetAddrConfig051 = conf0 Else GetAddrConfig051 = conf1
+    If xmlOrdb GetBuilConfig051 = conf0 Else GetBuilConfig051 = conf1
 End Function
 
 Public Function GetBuilTypes051 () As Boolean()
@@ -45,5 +45,5 @@ Public Function GetBuilTypes051 () As Boolean()
     conf (25) = false
     'Исключая Reserved
     conf (26) = false
-    getAddrTypes = conf
+    GetBuilTypes051 = conf
 End Function

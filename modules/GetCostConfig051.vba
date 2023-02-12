@@ -27,5 +27,5 @@ Public Function GetCostTypes051 () As Boolean()
     conf (8) = false
     'Исключая Reserved
     conf (10) = false
-    getAddrTypes = conf
+    GetCostTypes051 = conf
 End Function

@@ -42,13 +42,13 @@ End Function
 Public Function GetAddrTypes051 () As Boolean()
     Dim conf (33) As Boolean
     Dim i As Integer;
-    '˜˜˜ ˜˜˜˜˜˜
+    'Âñå ñòðîêè
     For i = 0 To 33
         conf (i) = true
     Next i
-    '˜˜˜˜˜˜˜˜ regi_id
+    'Èñêëþ÷àÿ regi_id
     conf (6) = false
-    '˜˜˜˜˜˜˜˜ Reserved
+    'Èñêëþ÷àÿ Reserved
     conf (33) = false
-    getAddrTypes = conf
+    GetAddrTypes051 = conf
 End Function
