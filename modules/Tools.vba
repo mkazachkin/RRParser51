@@ -53,7 +53,7 @@ Public Function DictCheck(searchStr As String, searchColumn As String, tableName
     Dim searchSQL As String
     searchSQL = "select " & idName & " from " & tableName & " where " & searchColumn & " = '" & searchStr & "';"
     Set searchRS = searchDB.OpenRecordset(searchSQL)
-    dict_check = searchRS.Fields.Item(0).Value
+    DictCheck = searchRS.Fields.Item(0).Value
     Set searchRS = Nothing
     Set searchDB = Nothing
 End Function

@@ -10,15 +10,15 @@ Public Function ParsXMLAsgn051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Конфигурация -----
     ' ------------------------
     'Получаем теги
-    Dim asgnXMLTags(7) As String
-        asgnXMLTags = GetAsgnConfig051(true)
+    Dim asgnXMLTags() As Variant
+        asgnXMLTags = GetAsgnConfig051(True)
     'Получаем поля БД
-    Dim asgnDBFields(7) As String
-        asgnDBFields = GetAsgnConfig051(false)
+    Dim asgnDBFields() As Variant
+        asgnDBFields = GetAsgnConfig051(False)
         asgnDBFields(5) = tblKeyName
     Dim asgnDBValues(7) As String
     'Получаем типы данных
-    Dim asgnDBTypes(7) As Boolean
+    Dim asgnDBTypes() As Variant
         asgnDBTypes = GetAsgnTypes051()
     'Служебное
     Dim i As Integer
@@ -28,16 +28,16 @@ Public Function ParsXMLAsgn051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Парсинг -----
     ' -------------------
     'Часть данных получаем извне
-    asgnDBValues (5) = tblKeyValue
-    asgnDBValues (6) = cadNum
+    asgnDBValues(5) = tblKeyValue
+    asgnDBValues(6) = cadNum
     'Зарезервируем и получим id будущей записи
     asgn_id = ReserveID(tblName, "asgn_id")
-    poksDBValues(7) = "null"
+    asgnDBValues(7) = "null"
     'Парсим
     Set asgnChild = asgnNode.FirstChild
     While (Not asgnChild Is Nothing)
         For i = 0 To 4
-            If asgnChild.NodeName = asgnXMLTags (i) Then asgnDBFields (i) = asgnChild.Text
+            If asgnChild.NodeName = asgnXMLTags(i) Then asgnDBValues(i) = asgnChild.Text
         Next i
         Set asgnChild = asgnChild.NextSibling
     Wend
@@ -56,5 +56,5 @@ Public Function ParsXMLAsgn051(ByVal tblName As String, ByVal tblKeyName As Stri
     Set insertDB = CurrentDb
     insertDB.Execute sqlStr
     Set insertDB = Nothing
-    ParsXMLPoks051 = "+"
+    ParsXMLAsgn051 = "+"
 End Function

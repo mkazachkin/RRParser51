@@ -10,12 +10,12 @@ Public Function ParsXMLPstn051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Конфигурация -----
     ' ------------------------
     'Получаем поля БД
-    Dim pstnDBFields(6) As String
-        pstnDBFields = GetPstnConfig051(false)
+    Dim pstnDBFields() As Variant
+        pstnDBFields = GetPstnConfig051(False)
         pstnDBFields(4) = tblKeyName
-    Dim pstnDBFields(6) As String
+    Dim pstnDBValues(6) As String
     'Получаем типы данных
-    Dim pstnDBTypes(6) As Boolean
+    Dim pstnDBTypes() As Variant
         pstnDBTypes = GetPstnTypes051()
     'Служебное
     Dim i As Integer
@@ -29,14 +29,14 @@ Public Function ParsXMLPstn051(ByVal tblName As String, ByVal tblKeyName As Stri
     pstnDBValues(5) = cadNum
     'Зарезервируем и получим id будущей записи
     pstn_id = ReserveID(tblName, "pstn_id")
-    poksDBValues(6) = "null"
+    pstnDBValues(6) = "null"
     'Парсим
     Set pstnChild = pstnNode.FirstChild
     While (Not pstnChild Is Nothing)
-        If pstnChild.getAttribute ("Number") <> nill Then pstnDBValues(0) = pstnChild.getAttribute ("Number")
-        If pstnChild.getAttribute ("Type") <> nill Then pstnDBValues(1) = pstnChild.getAttribute ("Type")
-        If pstnChild.FirstChild.getAttribute ("NumberOnPlan") <> nill Then pstnDBValues(2) = pstnChild.FirstChild.getAttribute ("NumberOnPlan")
-        If pstnChild.FirstChild.getAttribute ("Description") <> nill Then pstnDBValues(3) = pstnChild.FirstChild.getAttribute ("Description")
+        If pstnChild.getAttribute("Number") <> nill Then pstnDBValues(0) = pstnChild.getAttribute("Number")
+        If pstnChild.getAttribute("Type") <> nill Then pstnDBValues(1) = pstnChild.getAttribute("Type")
+        If (Not pstnChild.FirstChild Is Nothing) Then If pstnChild.FirstChild.getAttribute("NumberOnPlan") <> nill Then pstnDBValues(2) = pstnChild.FirstChild.getAttribute("NumberOnPlan")
+        If (Not pstnChild.FirstChild Is Nothing) Then If pstnChild.FirstChild.getAttribute("Description") <> nill Then pstnDBValues(3) = pstnChild.FirstChild.getAttribute("Description")
         Set pstnChild = pstnChild.NextSibling
     Wend
     ' -----------------------

@@ -18,7 +18,8 @@ Public Function ParsXMLKeyp051(ByVal tblName As String, ByVal tblKeyName As Stri
         numsDBFields(4) = "Reserved"
     'Служебное
     Dim insertSQL As String
-    Dim keypType, keypValue As String
+    Dim keypType As String
+    Dim keypValue As String
     ' -------------------
     ' ----- Парсинг -----
     ' -------------------
@@ -31,6 +32,8 @@ Public Function ParsXMLKeyp051(ByVal tblName As String, ByVal tblKeyName As Stri
         insertSQL = insertSQL & ") values ("
         insertSQL = insertSQL & "'" & keypType & "','" & keypValue & "'," & tblKeyValue & ",'" & cadNum & "');"
         insertDB.Execute insertSQL
+        keypType = ""
+        keypValue = ""
         Set keypChild = keypChild.NextSibling
     Wend
     Set insertDB = Nothing

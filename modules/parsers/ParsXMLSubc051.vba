@@ -10,15 +10,15 @@ Public Function ParsXMLSubc051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Конфигурация -----
     ' ------------------------
     'Получаем теги
-    Dim subcXMLTags(7) As String
-        subcXMLTags = GetSubcConfig051(true)
+    Dim subcXMLTags() As Variant
+        subcXMLTags = GetSubcConfig051(True)
     'Получаем поля БД
-    Dim subcDBFields(7) As String
-        subcXMLTags = GetSubcConfig051(false)
+    Dim subcDBFields() As Variant
+        subcDBFields = GetSubcConfig051(False)
         subcDBFields(5) = tblKeyName
     Dim subcDBValues(7) As String
     'Типы данных в БД строковые (s) или численные (d)
-    Dim subcDBTypes(7) As Boolean
+    Dim subcDBTypes() As Variant
         subcDBTypes = GetSubcTypes051()
     'Служебное
     Dim i As Integer
@@ -28,12 +28,18 @@ Public Function ParsXMLSubc051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Парсинг -----
     ' -------------------
     'Два дополнительных поля приходят снаружи
-    subcDBValues(5) = tblKeyValue
-    subcDBValues(6) = cadNum
+
     Set subcNode = subcNode.FirstChild
     While (Not subcNode Is Nothing)
         'Зарезервируем и получим id будущей записи
         subc_id = ReserveID(tblName, "subc_id")
+        subcDBValues(0) = ""
+        subcDBValues(1) = ""
+        subcDBValues(2) = ""
+        subcDBValues(3) = ""
+        subcDBValues(4) = ""
+        subcDBValues(5) = tblKeyValue
+        subcDBValues(6) = cadNum
         subcDBValues(7) = "null"
         If subcNode.getAttribute("NumberRecord") <> nill Then subcDBValues(0) = subcNode.getAttribute("NumberRecord")
         If subcNode.getAttribute("DateCreated") <> nill Then subcDBValues(1) = subcNode.getAttribute("DateCreated")
@@ -46,7 +52,7 @@ Public Function ParsXMLSubc051(ByVal tblName As String, ByVal tblKeyName As Stri
                 If subcChild.getAttribute("Value") <> nill Then subcDBValues(3) = Replace(subcChild.getAttribute("Value"), ".", ",")
             End If
             'Парсим один тип
-            If (subcChild.NodeName = subcXMLTags(4)) Then subcDBValues(3) = ParsXMLEnbr051(tblName & "_enbr", "subc_id", subc_id, cadNum, subcChild)
+            If (subcChild.NodeName = subcXMLTags(4)) Then subcDBValues(4) = ParsXMLEnbr051(tblName & "_enbr", "subc_id", subc_id, cadNum, subcChild)
             Set subcChild = subcChild.NextSibling
         Wend
         ' -----------------------

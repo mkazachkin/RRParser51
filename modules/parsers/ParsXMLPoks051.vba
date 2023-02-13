@@ -10,15 +10,15 @@ Public Function ParsXMLPoks051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Конфигурация -----
     ' ------------------------
     'Получаем теги
-    Dim poksXMLTags(11) As String
-        poksXMLTags = GetPoksConfig051(true)
+    Dim poksXMLTags() As Variant
+        poksXMLTags = GetPoksConfig051(True)
     'Получаем поля БД
-    Dim poksDBFields(11) As String
-        poksDBFields = GetPoksConfig051(false)
+    Dim poksDBFields() As Variant
+        poksDBFields = GetPoksConfig051(False)
         poksDBFields(9) = tblKeyName
     Dim poksDBValues(11) As String
     'Получаем типы данных
-    Dim poksDBTypes(11) As Boolean
+    Dim poksDBTypes() As Variant
         poksDBTypes = GetPoksTypes051()
     'Служебное
     Dim i As Integer
@@ -36,15 +36,15 @@ Public Function ParsXMLPoks051(ByVal tblName As String, ByVal tblKeyName As Stri
     'Парсим
     Set poksChild = poksNode.FirstChild
     While (Not poksChild Is Nothing)
-        If poksChild.NodeName = poksXMLTags(0) Then poksDBFields(0) = poksChild.Text
-        If poksChild.NodeName = poksXMLTags(1) Then poksDBFields(1) = poksChild.Text
-        If poksChild.NodeName = poksXMLTags(2) Then poksDBFields(2) = poksChild.Text
-        If poksChild.NodeName = poksXMLTags(3) Then poksDBFields(3) = poksChild.Text
-        If poksChild.NodeName = poksXMLTags(4) Then If poksChild.FirstChild.getAttribute("Wall") <> nill Then poksDBFields(4) = poksChild.FirstChild.getAttribute("Wall")
-        If poksChild.NodeName = poksXMLTags(5) Then If poksChild.getAttribute("YearBuilt") <> nill Then poksDBFields(5) = poksChild.getAttribute("YearBuilt")
-        If poksChild.NodeName = poksXMLTags(6) Then If poksChild.getAttribute("YearUsed") <> nill Then poksDBFields(6) = poksChild.getAttribute("YearUsed")
-        If poksChild.NodeName = poksXMLTags(7) Then If poksChild.getAttribute("Floors") <> nill Then poksDBFields(7) = poksChild.getAttribute("Floors")
-        If poksChild.NodeName = poksXMLTags(8) Then If poksChild.getAttribute("UndergroundFloors") <> nill Then poksDBFields(8) = poksChild.getAttribute("UndergroundFloors")
+        If poksChild.NodeName = poksXMLTags(0) Then poksDBValues(0) = poksChild.Text
+        If poksChild.NodeName = poksXMLTags(1) Then poksDBValues(1) = poksChild.Text
+        If poksChild.NodeName = poksXMLTags(2) Then poksDBValues(2) = poksChild.Text
+        If poksChild.NodeName = poksXMLTags(3) Then poksDBValues(3) = poksChild.Text
+        If poksChild.NodeName = poksXMLTags(4) Then If poksChild.FirstChild.getAttribute("Wall") <> nill Then poksDBValues(4) = poksChild.FirstChild.getAttribute("Wall")
+        If poksChild.NodeName = poksXMLTags(5) Then If poksChild.getAttribute("YearBuilt") <> nill Then poksDBValues(5) = poksChild.getAttribute("YearBuilt")
+        If poksChild.NodeName = poksXMLTags(6) Then If poksChild.getAttribute("YearUsed") <> nill Then poksDBValues(6) = poksChild.getAttribute("YearUsed")
+        If poksChild.NodeName = poksXMLTags(7) Then If poksChild.getAttribute("Floors") <> nill Then poksDBValues(7) = poksChild.getAttribute("Floors")
+        If poksChild.NodeName = poksXMLTags(8) Then If poksChild.getAttribute("UndergroundFloors") <> nill Then poksDBValues(8) = poksChild.getAttribute("UndergroundFloors")
         Set poksChild = poksChild.NextSibling
     Wend
     ' -----------------------

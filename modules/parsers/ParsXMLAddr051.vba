@@ -6,15 +6,15 @@ Public Function ParsXMLAddr051(ByVal addrNode As Object) As String
     ' ----- Конфигурация -----
     ' ------------------------
     'Получаем теги
-    Dim addrXMLTag(33) As String
-        addrXMLTag = GetAddrConfig051(true)
+    Dim addrXMLTag() As Variant
+        addrXMLTag = GetAddrConfig051(True)
     'Получаем поля БД
-    Dim addrDBFields(33) As String
-        addrDBFields = GetAddrConfig051(false)
+    Dim addrDBFields() As Variant
+        addrDBFields = GetAddrConfig051(False)
     'Инициализируем значения
     Dim addrDBValues(33) As String
     'Получаем типы данных
-    Dim addrDBTypes(33) As Boolean
+    Dim addrDBTypes() As Variant
         addrDBTypes = GetAddrTypes051()
     'Задаем название таблицы адресов
     Dim tblName As String
@@ -27,7 +27,8 @@ Public Function ParsXMLAddr051(ByVal addrNode As Object) As String
     'Служебное
     Dim i As Integer
     Dim rs As Recordset
-    Dim shaStr, sqlStr As String
+    Dim shaStr As String
+    Dim sqlStr As String
     Dim addr_id As Long
     ' -------------------
     ' ----- Парсинг -----
@@ -36,7 +37,7 @@ Public Function ParsXMLAddr051(ByVal addrNode As Object) As String
     'Код вида адреса и его название
     If (addrNode.getAttribute(addrXMLTag(30)) <> nill) Then
         addrDBValues(30) = addrNode.getAttribute(addrXMLTag(30))
-        If addrNode.getAttribute(addrXMLTag(30))= "0" Then
+        If addrNode.getAttribute(addrXMLTag(30)) = "0" Then
             addrDBValues(31) = "Местоположение объекта недвижимости"
         Else
             addrDBValues(31) = "Присвоенный в установленном порядке адрес объекта недвижимости"
@@ -47,7 +48,7 @@ Public Function ParsXMLAddr051(ByVal addrNode As Object) As String
     While (Not addrChild Is Nothing)
         For i = 0 To 8
             If (addrChild.NodeName = addrXMLTag(i)) Then
-                addrDBValues(0) = addrChild.Text
+                addrDBValues(i) = addrChild.Text
             End If
         Next i
         'Region
@@ -60,7 +61,7 @@ Public Function ParsXMLAddr051(ByVal addrNode As Object) As String
                     addrDBValues(i) = addrChild.getAttribute("Type")
                 End If
                 If addrChild.getAttribute("Name") <> nill Then
-                    addrDBValues(i+1) = addrChild.getAttribute("Name")
+                    addrDBValues(i + 1) = addrChild.getAttribute("Name")
                 End If
             End If
         Next i
@@ -70,7 +71,7 @@ Public Function ParsXMLAddr051(ByVal addrNode As Object) As String
                     addrDBValues(i) = addrChild.getAttribute("Type")
                 End If
                 If addrChild.getAttribute("Value") <> nill Then
-                    addrDBValues(i+1) = addrChild.getAttribute("Value")
+                    addrDBValues(i + 1) = addrChild.getAttribute("Value")
                 End If
             End If
         Next i
@@ -111,10 +112,10 @@ Public Function ParsXMLAddr051(ByVal addrNode As Object) As String
         sqlStr = PrepareInsertSQL(sqlStr)
         insertDB.Execute sqlStr
     Else
-        addr_id = Cstr(rs.Fields.Item(0).Value)
+        addr_id = CStr(rs.Fields.Item(0).Value)
     End If
     Set insertDB = Nothing
     Set rs = Nothing
     'Возвращаем id
-    parsXMLAddr051 = addr_id
+    ParsXMLAddr051 = addr_id
 End Function

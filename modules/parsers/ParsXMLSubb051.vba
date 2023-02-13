@@ -10,15 +10,15 @@ Public Function ParsXMLSubb051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Конфигурация -----
     ' ------------------------
     'Получаем теги
-    Dim subbXMLTags(6) As String
-        subbXMLTags = GetSubbConfig051(true)
+    Dim subbXMLTags() As Variant
+        subbXMLTags = GetSubbConfig051(True)
     'Получаем поля БД
-    Dim subbDBFields(6) As String
-        subbXMLTags = GetSubbConfig051(false)
+    Dim subbDBFields() As Variant
+        subbDBFields = GetSubbConfig051(False)
         subbDBFields(4) = tblKeyName
     Dim subbDBValues(6) As String
     'Получаем типы данных
-    Dim subbDBTypes(6) As Boolean
+    Dim subbDBTypes() As Variant
         subbDBTypes = GetSubbTypes051()
     'Служебное
     Dim i As Integer
@@ -28,13 +28,17 @@ Public Function ParsXMLSubb051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Парсинг -----
     ' -------------------
     'Два дополнительных поля приходят снаружи
-    subbDBValues(4) = tblKeyValue
-    subbDBValues(5) = cadNum
     Set builChild = subbNode.FirstChild
     Set insertDB = CurrentDb
     While (Not builChild Is Nothing)
         'Зарезервируем и получим id будущей записи
         subb_id = ReserveID(tblName, "subb_id")
+        subbDBValues(0) = ""
+        subbDBValues(1) = ""
+        subbDBValues(2) = ""
+        subbDBValues(3) = ""
+        subbDBValues(4) = tblKeyValue
+        subbDBValues(5) = cadNum
         subbDBValues(6) = "null"
         If builChild.getAttribute("NumberRecord") <> nill Then subbDBValues(0) = builChild.getAttribute("NumberRecord")
         If builChild.getAttribute("DateCreated") <> nill Then subbDBValues(1) = builChild.getAttribute("DateCreated")

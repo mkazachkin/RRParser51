@@ -10,15 +10,15 @@ Public Function ParsXMLDocs051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Конфигурация -----
     ' ------------------------
     'Получаем теги
-    Dim docsXMLTags(9) As String
-        docsXMLTags = GetDocsConfig051(true)
+    Dim docsXMLTags() As Variant
+        docsXMLTags = GetDocsConfig051(True)
     'Получаем поля БД
-    Dim docsDBFields(9) As String
-        docsDBFields =  GetDocsConfig051(false)
+    Dim docsDBFields() As Variant
+        docsDBFields = GetDocsConfig051(False)
         docsDBFields(7) = tblKeyName
     Dim docsDBValues(9) As String
     'Получаем типы данных
-    Dim docsDBTypes(9) As Boolean
+    Dim docsDBTypes() As Variant
         docsDBTypes = GetDocsTypes051()
     'Служебное
     Dim i As Integer
@@ -64,5 +64,5 @@ Public Function ParsXMLDocs051(ByVal tblName As String, ByVal tblKeyName As Stri
     Set insertDB = CurrentDb
     insertDB.Execute sqlStr
     Set insertDB = Nothing
-    parsXMLDocuments051 = "+"
+    ParsXMLDocs051 = "+"
 End Function

@@ -10,15 +10,15 @@ Public Function ParsXMLCost051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Конфигурация -----
     ' ------------------------
     'Получаем теги
-    Dim cdcsXMLTags(10) As String
-        cdcsXMLTags = GetCostConfig051(true)
+    Dim cdcsXMLTags() As Variant
+        cdcsXMLTags = GetCostConfig051(True)
     'Получаем поля БД
-    Dim cdcsDBFields(10) As String
-        cdcsDBFields = GetCostConfig051(false)
+    Dim cdcsDBFields() As Variant
+        cdcsDBFields = GetCostConfig051(False)
         cdcsDBFields(8) = tblKeyName
     Dim cdcsDBValues(10) As String
     'Получаем типы данных
-    Dim cdcsDBTypes(10) As Boolean
+    Dim cdcsDBTypes() As Variant
         cdcsDBTypes = GetCostTypes051()
     'Служебное
     Dim i As Integer

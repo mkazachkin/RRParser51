@@ -10,15 +10,16 @@ Public Function ParsXMLEnbr051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Конфигурация -----
     ' ------------------------
     'Получаем теги
-    Dim enbrXMLTags(7) As String
-        enbrXMLTags = GetEnbrConfig051(true)
+    Dim enbrXMLTags() As Variant
+        enbrXMLTags = GetEnbrConfig051(True)
     'Получаем поля БД
-    Dim enbrDBFields(7) As String
-        enbrDBFields = GetEnbrConfig051(false)
+    Dim enbrDBFields() As Variant
+        enbrDBFields = GetEnbrConfig051(False)
         enbrDBFields(5) = tblKeyName
     Dim enbrDBValues(7) As String
     'Получаем типы данных
-    Dim enbrDBTypes(7) As Boolean
+    Dim enbrDBTypes() As Variant
+        enbrDBTypes = GetEnbrTypes051()
     'Служебное
     Dim i As Integer
     Dim enbr_id As String
@@ -26,13 +27,17 @@ Public Function ParsXMLEnbr051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' -------------------
     ' ----- Парсинг -----
     ' -------------------
-    'Два дополнительных поля приходят снаружи
-    enbrDBValues(5) = tblKeyValue
-    enbrDBValues(6) = cadNum
     Set enbrNode = enbrNode.FirstChild
     While (Not enbrNode Is Nothing)
         'Зарезервируем и получим id будущей записи
         enbr_id = ReserveID(tblName, "enbr_id")
+        enbrDBValues(0) = ""
+        enbrDBValues(1) = ""
+        enbrDBValues(2) = ""
+        enbrDBValues(3) = ""
+        enbrDBValues(4) = ""
+        enbrDBValues(5) = tblKeyValue
+        enbrDBValues(6) = cadNum
         enbrDBValues(7) = "null"
         'Парсим
         Set enbrChild = enbrNode.FirstChild

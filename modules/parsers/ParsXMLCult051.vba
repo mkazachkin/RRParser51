@@ -1,5 +1,5 @@
 Option Compare Database
-Public Function ParsXMLCult051(ByVal tblName As String, ByVal tblKeyName As String, ByVal tblKeyValue As String, ByVal cadNum As String, ByVal cltrNode As Object) As String
+Public Function ParsXMLCult051(ByVal tblName As String, ByVal tblKeyName As String, ByVal tblKeyValue As String, ByVal cadNum As String, ByVal cultNode As Object) As String
     'Получаем
     '   tblName - префикс таблиц XML
     '   tblKeyName - название идентификатора XML
@@ -10,15 +10,16 @@ Public Function ParsXMLCult051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Конфигурация -----
     ' ------------------------
     'Получаем теги
-    Dim cultXMLTags(10) As String
-        cultXMLTags = GetCultConfig051(true)
+    Dim cultXMLTags() As Variant
+        cultXMLTags = GetCultConfig051(True)
     'Получаем поля БД
-    Dim cultDBFields(10) As String
-        cultDBFields = GetCultConfig051(false)
+    Dim cultDBFields() As Variant
+        cultDBFields = GetCultConfig051(False)
         cultDBFields(8) = tblKeyName
     Dim cultDBValues(10) As String
     'Получаем типы данных
-    Dim cultDBTypes(10) As Boolean
+    Dim cultDBTypes() As Variant
+        cultDBTypes = GetCultTypes051()
     'Служебное
     Dim i As Integer
     Dim sqlStr As String
@@ -27,11 +28,11 @@ Public Function ParsXMLCult051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Парсинг -----
     ' -------------------
     cultDBValues(8) = tblKeyValue
-    cultDBValues(9) = cadCode
+    cultDBValues(9) = cadNum
     'Зарезервируем и получим id будущей записи
     cult_id = ReserveID(tblName, "cult_id")
     cultDBValues(10) = "null"
-    Set cultNode = cltrNode.FirstChild
+    Set cultNode = cultNode.FirstChild
     While (Not cultNode Is Nothing)
         If cultNode.NodeName = "InclusionEGROKN" Then
             Set egrkonNode = cultNode.FirstChild
@@ -74,7 +75,7 @@ Public Function ParsXMLCult051(ByVal tblName As String, ByVal tblKeyName As Stri
     sqlStr = sqlStr & " where cult_id = " & cult_id & ";"
     sqlStr = PrepareInsertSQL(sqlStr)
     Set insertDB = CurrentDb
-    insertDB.Execute insertSQL
+    insertDB.Execute sqlStr
     Set insertDB = Nothing
-    ParsXMLCultur051 = "+"
+    ParsXMLCult051 = "+"
 End Function

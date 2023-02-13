@@ -10,16 +10,16 @@ Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Конфигурация -----
     ' ------------------------
     'Получаем теги
-    Dim builXMLTags(26) As String
-        builXMLTags = GetBuilConfig051 (true)
+    Dim builXMLTags() As Variant
+        builXMLTags = GetBuilConfig051(True)
     'Получаем поля БД
-    Dim builDBFields(26) As String
-        builDBFields = GetBuilConfig051 (false)
+    Dim builDBFields() As Variant
+        builDBFields = GetBuilConfig051(False)
         builDBFields(25) = tblKeyName
     'Инициализируем значения
     Dim builDBValues(26) As String
     'Получаем типы данных
-    Dim builDBTypes(26) As Boolean
+    Dim builDBTypes() As Variant
         builDBTypes = GetBuilTypes051()
     'Служебное
     Dim i As Integer
@@ -103,4 +103,5 @@ Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As Stri
     Set insertDB = CurrentDb
     insertDB.Execute sqlStr
     Set insertDB = Nothing
+    ParsXMLBuil051 = "+"
 End Function
