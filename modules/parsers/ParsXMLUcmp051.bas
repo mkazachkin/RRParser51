@@ -66,17 +66,11 @@ Public Function ParsXMLUcmp051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' -----------------------
     ' ----- Запись в БД -----
     ' -----------------------
-    'Обрабатываем строки в данных
-    For i = 0 To 14
-        If ucmpDBTypes(i) Then ucmpDBValues(i) = "{$}" & ucmpDBValues(i) & "{$}"
-    Next i
-    'Добавляем запятые
-    For i = 0 To 13
-        ucmpDBValues(i) = ucmpDBValues(i) & ","
-    Next i
     'Готовим запрос на добавление данных
     sqlStr = "update " & tblName & " set "
     For i = 0 To 14
+        If ucmpDBTypes(i) Then ucmpDBValues(i) = "{$}" & ucmpDBValues(i) & "{$}"
+        If (i < 14) Then ucmpDBValues(i) = ucmpDBValues(i) & ","
         sqlStr = sqlStr & ucmpDBFields(i) & "=" & ucmpDBValues(i)
     Next i
     sqlStr = sqlStr & " where ucmp_id = " & ucmp_id & ";"

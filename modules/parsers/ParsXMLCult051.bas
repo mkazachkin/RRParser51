@@ -59,17 +59,11 @@ Public Function ParsXMLCult051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' -----------------------
     ' ----- Запись в БД -----
     ' -----------------------
-    'Обрабатываем строки в данных
-    For i = 0 To 9
-        If cultDBTypes(i) Then cultDBValues(i) = "{$}" & cultDBValues(i) & "{$}"
-    Next i
-    'Добавляем запятые
-    For i = 0 To 8
-        cultDBValues(i) = cultDBValues(i) & ","
-    Next i
     'Готовим запрос на добавление данных
     sqlStr = "update " & tblName & " set "
     For i = 0 To 9
+        If cultDBTypes(i) Then cultDBValues(i) = "{$}" & cultDBValues(i) & "{$}"
+        If (i < 9) Then cultDBValues(i) = cultDBValues(i) & ","
         sqlStr = sqlStr & cultDBFields(i) & "=" & cultDBValues(i)
     Next i
     sqlStr = sqlStr & " where cult_id = " & cult_id & ";"

@@ -48,7 +48,7 @@ Public Function ParsXMLAsgn051(ByVal tblName As String, ByVal tblKeyName As Stri
     sqlStr = "update " & tblName & " set "
     For i = 0 To 7
         If asgnDBTypes(i) Then asgnDBValues(i) = "{$}" & asgnDBValues(i) & "{$}"
-        If i < 7 Then asgnDBValues(i) = asgnDBValues(i) & ","
+        If (i < 7) Then asgnDBValues(i) = asgnDBValues(i) & ","
         sqlStr = sqlStr & asgnDBFields(i) & "=" & asgnDBValues(i)
     Next i
     sqlStr = sqlStr & " where asgn_id = " & asgn_id & ";"

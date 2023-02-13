@@ -57,17 +57,11 @@ Public Function ParsXMLEnbr051(ByVal tblName As String, ByVal tblKeyName As Stri
             If (enbrChild.NodeName = enbrXMLTags(4)) Then enbrDBValues(4) = ParsXMLDocs051(tblName & "_docs", "enbr_id", enbr_id, cadNum, enbrChild)
             Set enbrChild = enbrChild.NextSibling
         Wend
-        'Обрабатываем строки в данных
-        For i = 0 To 6
-            If enbrDBTypes(i) Then enbrDBValues(i) = "{$}" & enbrDBValues(i) & "{$}"
-        Next i
-        'Добавляем запятые
-        For i = 0 To 5
-            enbrDBValues(i) = enbrDBValues(i) & ","
-        Next i
         'Готовим запрос на добавление данных
         sqlStr = "update " & tblName & " set "
         For i = 0 To 6
+            If enbrDBTypes(i) Then enbrDBValues(i) = "{$}" & enbrDBValues(i) & "{$}"
+            If (i < 6) Then enbrDBValues(i) = enbrDBValues(i) & ","
             sqlStr = sqlStr & enbrDBFields(i) & "=" & enbrDBValues(i)
         Next i
         sqlStr = sqlStr & " where enbr_id = " & enbr_id & ";"

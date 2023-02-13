@@ -85,17 +85,11 @@ Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' -----------------------
     'Area нужно отработать отдельно
     builDBValues(8) = Replace(builDBValues(8), ".", ",")
-    'Обрабатываем строки в данных
-    For i = 0 To 25
-        If builDBTypes(i) Then builDBValues(i) = "{$}" & builDBValues(i) & "{$}"
-    Next i
-    'Добавляем запятые
-    For i = 0 To 24
-        builDBValues(i) = builDBValues(i) & ","
-    Next i
     'Готовим запрос на добавление данных
     sqlStr = "update " & tblName & " set "
     For i = 0 To 25
+        If builDBTypes(i) Then builDBValues(i) = "{$}" & builDBValues(i) & "{$}"
+        if (i < 25) Then builDBValues(i) = builDBValues(i) & ","
         sqlStr = sqlStr & builDBFields(i) & "=" & builDBValues(i)
     Next i
     sqlStr = sqlStr & " where buil_id = " & buil_id & ";"

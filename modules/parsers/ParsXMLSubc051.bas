@@ -58,17 +58,11 @@ Public Function ParsXMLSubc051(ByVal tblName As String, ByVal tblKeyName As Stri
         ' -----------------------
         ' ----- Запись в БД -----
         ' -----------------------
-        'Обрабатываем строки в данных
-        For i = 0 To 6
-            If subcDBTypes(i) Then subcDBValues(i) = "{$}" & subcDBValues(i) & "{$}"
-        Next i
-        'Добавляем запятые
-        For i = 0 To 5
-            subcDBValues(i) = subcDBValues(i) & ","
-        Next i
         'Готовим запрос на добавление данных
         sqlStr = "update " & tblName & " set "
         For i = 0 To 6
+            If subcDBTypes(i) Then subcDBValues(i) = "{$}" & subcDBValues(i) & "{$}"
+            If (i < 6) Then subcDBValues(i) = subcDBValues(i) & ","
             sqlStr = sqlStr & subcDBFields(i) & "=" & subcDBValues(i)
         Next i
         sqlStr = sqlStr & " where subc_id = " & subc_id & ";"

@@ -54,7 +54,7 @@ Public Function ParsXMLPoks051(ByVal tblName As String, ByVal tblKeyName As Stri
     sqlStr = "update " & tblName & " set "
     For i = 0 To 10
         If poksDBTypes(i) Then poksDBValues(i) = "{$}" & poksDBValues(i) & "{$}"
-        If i < 10 Then poksDBValues(i) = poksDBValues(i) & ","
+        If (i < 10) Then poksDBValues(i) = poksDBValues(i) & ","
         sqlStr = sqlStr & poksDBFields(i) & "=" & poksDBValues(i)
     Next i
     sqlStr = sqlStr & " where prnt_id = " & prnt_id & ";"

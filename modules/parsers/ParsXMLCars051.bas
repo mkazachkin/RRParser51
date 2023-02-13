@@ -69,17 +69,11 @@ Public Function ParsXMLCars051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' -----------------------
     'Area нужно отработать отдельно
     carsDBValues(7) = Replace(carsDBValues(7), ".", ",")
-    'Обрабатываем строки в данных
-    For i = 0 To 15
-        If carsDBTypes(i) Then carsDBValues(i) = "{$}" & carsDBValues(i) & "{$}"
-    Next i
-    'Добавляем запятые
-    For i = 0 To 14
-        carsDBValues(i) = carsDBValues(i) & ","
-    Next i
     'Готовим запрос на добавление данных
     sqlStr = "update " & tblName & " set "
     For i = 0 To 15
+        If carsDBTypes(i) Then carsDBValues(i) = "{$}" & carsDBValues(i) & "{$}"
+        If (i < 15) Then carsDBValues(i) = carsDBValues(i) & ","
         sqlStr = sqlStr & carsDBFields(i) & "=" & carsDBValues(i)
     Next i
     sqlStr = sqlStr & " where cars_id = " & cars_id & ";"

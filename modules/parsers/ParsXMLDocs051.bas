@@ -46,17 +46,11 @@ Public Function ParsXMLDocs051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' -----------------------
     ' ----- Запись в БД -----
     ' -----------------------
-    'Обрабатываем строки в данных
-    For i = 0 To 8
-        If docsDBTypes(i) Then docsDBValues(i) = "{$}" & docsDBValues(i) & "{$}"
-    Next i
-    'Добавляем запятые
-    For i = 0 To 7
-        docsDBValues(i) = docsDBValues(i) & ","
-    Next i
     'Готовим запрос на добавление данных
     sqlStr = "update " & tblName & " set "
     For i = 0 To 8
+        If docsDBTypes(i) Then docsDBValues(i) = "{$}" & docsDBValues(i) & "{$}"
+        If (i < 8) Then docsDBValues(i) = docsDBValues(i) & ","
         sqlStr = sqlStr & docsDBFields(i) & "=" & docsDBValues(i)
     Next i
     sqlStr = sqlStr & " where docs_id = " & docs_id & ";"

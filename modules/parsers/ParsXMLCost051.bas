@@ -52,17 +52,11 @@ Public Function ParsXMLCost051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' -----------------------
     ' ----- Запись в БД -----
     ' -----------------------
-    'Обрабатываем строки в данных
-    For i = 0 To 9
-        If cdcsDBTypes(i) Then cdcsDBValues(i) = "{$}" & cdcsDBValues(i) & "{$}"
-    Next i
-    'Добавляем запятые
-    For i = 0 To 8
-        cdcsDBValues(i) = cdcsDBValues(i) & ","
-    Next i
     'Готовим запрос на добавление данных
     sqlStr = "update " & tblName & " set "
     For i = 0 To 9
+        If cdcsDBTypes(i) Then cdcsDBValues(i) = "{$}" & cdcsDBValues(i) & "{$}"
+        If (i < 9) Then cdcsDBValues(i) = cdcsDBValues(i) & ","
         sqlStr = sqlStr & cdcsDBFields(i) & "=" & cdcsDBValues(i)
     Next i
     sqlStr = sqlStr & " where cdcs_id = " & cdcs_id & ";"

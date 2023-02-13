@@ -95,17 +95,11 @@ Public Function ParsXMLAddr051(ByVal addrNode As Object) As String
         'Зарезервируем и получим id будущей записи
         addr_id = ReserveID(tblName, "addr_id")
         addrDBValues(33) = "null"
-        'Обрабатываем строки в данных
-        For i = 0 To 32
-            If addrDBTypes(i) Then addrDBValues(i) = "{$}" & addrDBValues(i) & "{$}"
-        Next i
-        'Добавляем запятые
-        For i = 0 To 31
-            addrDBValues(i) = addrDBValues(i) & ","
-        Next i
         'Готовим запрос на добавление данных
         sqlStr = "update " & tblName & " set "
         For i = 0 To 32
+            If addrDBTypes(i) Then addrDBValues(i) = "{$}" & addrDBValues(i) & "{$}"
+            if (i < 32) Then addrDBValues(i) = addrDBValues(i) & ","
             sqlStr = sqlStr & addrDBFields(i) & "=" & addrDBValues(i)
         Next i
         sqlStr = sqlStr & " where addr_id = " & addr_id & ";"

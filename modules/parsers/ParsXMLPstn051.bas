@@ -46,7 +46,7 @@ Public Function ParsXMLPstn051(ByVal tblName As String, ByVal tblKeyName As Stri
     sqlStr = "update " & tblName & " set "
     For i = 0 To 5
         If pstnDBTypes(i) Then pstnDBValues(i) = "{$}" & pstnDBValues(i) & "{$}"
-        If i < 5 Then pstnDBValues(i) = pstnDBValues(i) & ","
+        If (i < 5) Then pstnDBValues(i) = pstnDBValues(i) & ","
         sqlStr = sqlStr & pstnDBFields(i) & "=" & pstnDBValues(i)
     Next i
     sqlStr = sqlStr & " where pstn_id = " & pstn_id & ";"

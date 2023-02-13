@@ -79,17 +79,11 @@ Public Function ParsXMLFlat051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' -----------------------
     'Area нужно отработать отдельно
     flatDBValues(9) = Replace(flatDBValues(9), ".", ",")
-    'Обрабатываем строки в данных
-    For i = 0 To 22
-        If flatDBTypes(i) Then flatDBValues(i) = "{$}" & flatDBValues(i) & "{$}"
-    Next i
-    'Добавляем запятые
-    For i = 0 To 21
-        flatDBValues(i) = flatDBValues(i) & ","
-    Next i
     'Готовим запрос на добавление данных
     sqlStr = "update " & tblName & " set "
     For i = 0 To 22
+        If flatDBTypes(i) Then flatDBValues(i) = "{$}" & flatDBValues(i) & "{$}"
+        If (i < 22) Then flatDBValues(i) = flatDBValues(i) & ","
         sqlStr = sqlStr & flatDBFields(i) & "=" & flatDBValues(i)
     Next i
     sqlStr = sqlStr & " where flat_id = " & flat_id & ";"
