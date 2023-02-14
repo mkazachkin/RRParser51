@@ -1,8 +1,7 @@
 Option Compare Database
-Public Function GetFlatConfig051(xmlOrdb As Boolean) As Variant
+Public Function GetCarsConfig051(xmlOrdb As Boolean) As Variant
     Dim conf0(16) As Variant
     Dim conf1(16) As Variant
-    'XML теги                                         'Поля в БД
     conf0(0) = "CadastralNumber":           conf1(0) = "CadastralNumber"
     conf0(1) = "DateCreated":               conf1(1) = "DatesCreated"
     conf0(2) = "FoundationDate":            conf1(2) = "FoundationDates"
@@ -25,15 +24,12 @@ End Function
 Public Function GetCarsTypes051() As Variant
     Dim conf(16) As Variant
     Dim i As Integer
-    'Все строки
     For i = 0 To 16
         conf(i) = True
     Next i
-    'Исключая addr_id
     conf(12) = False
-    'Исключая id
     conf(15) = False
-    'Исключая Reserved
     conf(16) = False
     GetCarsTypes051 = conf
 End Function
+

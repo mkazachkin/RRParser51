@@ -89,66 +89,60 @@ Private Function ParseXML_051(ByVal importFilePath As String, Optional ByVal act
         'importReassessmentCode - номер статьи, по которой проводится дооценка
         'importTransmittalLetter- номер сопроводительного письма к данным
 
-    'Служебные переменные
-    Set cadastrDB = CurrentDb
-    Dim insertSQL As String
-    Dim selectSQL As String
-    Dim deleteSQL As String
-    Dim xmlf_id As Long
-    Dim rs As DAO.Recordset
-
+    'Таблица импортированных XML
+    Const importXMLTable = "public_import_t_xml_files"
     Dim importXMLFilesTable(11) As String
     importXMLFilesTable(0) = "listguid"
-    Dim listguid As String
     importXMLFilesTable(1) = "xmlversion"
-    Dim xmlversion As String
     importXMLFilesTable(2) = "actnumber"
-    'Прилетает снаружи actNumber
     importXMLFilesTable(3) = "reassessmentcode"
-    'Прилетает снаружи reassessmentcode
     importXMLFilesTable(4) = "transmittalletter"
-    'Прилетает снаружи transmittalletter
     importXMLFilesTable(5) = "importdate"
-    Dim importdate As String
     importXMLFilesTable(6) = "formdate"
-    Dim formdate As String
-    formdate = Format(Date, "YYYY-mm-dd")
     importXMLFilesTable(7) = "list_id"
-    Dim list_id As Long
     importXMLFilesTable(8) = "regi_id"
-    Dim regi_id As Long
     importXMLFilesTable(9) = "real_id"
-    Dim real_id As Long
     importXMLFilesTable(10) = "ctgr_id"
-    Dim ctgr_id As Long
-    'Получаем имя пользователя, который импортирует файлы
     importXMLFilesTable(11) = "username"
-    Dim importXMLFilesUserName As String
-    importXMLFilesUserName = LoginUserName()
-
-    Const importXMLTable = "public_import_t_xml_files"                    'Название таблицы со списком импортированных XML
-
     'Таблицы словарей
     Dim dictRealty(2) As String
     dictRealty(0) = "RealtyCode"
     dictRealty(1) = "public_import_dict_realty"
     dictRealty(2) = "real_id"
-    
     Dim dictList(2) As String
     dictList(0) = "ListCode"
     dictList(1) = "public_import_dict_list"
     dictList(2) = "list_id"
-    
     Dim dictRegi(2) As String
     dictRegi(0) = "RegionCode"
     dictRegi(1) = "public_import_dict_region"
     dictRegi(2) = "regi_id"
-
     Dim dictCtgr(2) As String
     dictCtgr(0) = "CategoryCode"
     dictCtgr(1) = "public_import_dict_categories"
     dictCtgr(2) = "ctgr_id"
+    'Служебные переменные
+    Dim sqlStr As String
+    Dim objType As String
+    Dim xmlf_id As Long
+    Dim rs As DAO.Recordset
+    Dim i As Integer
+    Dim tmp As Boolean
+    'Переменные для хранения полученных данных XML
+    Dim listguid As String
+    Dim xmlversion As String
+    Dim importdate As String
+    Dim list_id As Long
+    Dim regi_id As Long
+    Dim real_id As Long
+    Dim ctgr_id As Long
+    Dim formdate As String
+    Dim importXMLFilesUserName As String
 
+    'Дату сразу поставим текущую
+    formdate = Format(Date, "YYYY-mm-dd")
+    'Получаем имя пользователя, который импортирует файлы
+    importXMLFilesUserName = LoginUserName()
 
     'Создаем OLE-объект и отключаем асинхронную загрузку
     Set xmlFile = CreateObject("Msxml2.DOMDocument")
@@ -184,6 +178,7 @@ Private Function ParseXML_051(ByVal importFilePath As String, Optional ByVal act
         If (listInfoChild.NodeName = "ObjectsType") Then
             'Парсим выясняем вид объектов недвижимости
             real_id = DictCheck(listInfoChild.FirstChild.Text, dictRealty(0), dictRealty(1), dictRealty(2))
+            objType = listInfoChild.FirstChild.Text
         End If
         If (listInfoChild.NodeName = "Categories") Then
             'Парсим категории земель
@@ -197,23 +192,22 @@ Private Function ParseXML_051(ByVal importFilePath As String, Optional ByVal act
     
     'Проверяем были ли загружены данные из указанного XML в БД
     'xmlf_id - ключ в БД к записям.
-    selectSQL = "select xmlf_id, " & importXMLFilesTable(0) & " from " & importXMLTable & " where listguid='" & listguid & "';"
-    Set rs = cadastrDB.OpenRecordset(selectSQL)
+    Set cadastrDB = CurrentDb
+    sqlStr = "select xmlf_id, " & importXMLFilesTable(0) & " from " & importXMLTable & " where listguid='" & listguid & "';"
+    Set rs = cadastrDB.OpenRecordset(sqlStr)
     If rs.RecordCount > 0 Then
         'Данные с GUID из файла уже были добавлены в БД. Либо их удаляем, либо выходим
         If MsgBox("Данные из файла с именем " & importFilePath & " уже были добавлены в базу данных. Заменить их?", vbYesNo) = vbYes Then
             'Удаляем данные с этим GUID из всех таблиц
-            'Получаем ключ, по которому осуществлялась привязка к XML-файлу
-            'Передернем recordset на всякий пожарный случай
-            rs.MoveLast
             rs.MoveFirst
-            For counter = 1 To rs.RecordCount
-                'Запись, вообще говоря, должна быть одна, но черт его знает
-                'Удаляем из списка импортированных файлов
-                deleteSQL = "delete from " & importXMLTable & " where xmlf_id = " & rs.Fields.Item(0).Value & ";"
-                cadastrDB.Execute deleteSQL
+            Do While Not rs.EOF
+                xmlf_id = rs.Fields("xmlf_id").Value
+                tmp = ClearObjTable(objType, xmlf_id)
+                'Других данных в наших таблицах быть не должно
+                sqlStr = "delete from " & importXMLTable & " where xmlf_id = " & rs.Fields("xmlf_id").Value & ";"
+                cadastrDB.Execute sqlStr
                 rs.MoveNext
-            Next counter
+            Loop
         Else
             'Данные не трогаем, файл пропускаем и выходим из функции
             ParseXML_051 = False
@@ -222,42 +216,39 @@ Private Function ParseXML_051(ByVal importFilePath As String, Optional ByVal act
     End If
     
     'Заполняем таблицу импортированных XML
-    insertSQL = "insert into " & importXMLTable & " ("
-    For counter = 0 To 10
-        insertSQL = insertSQL & importXMLFilesTable(counter) & ","
-    Next counter
-    insertSQL = insertSQL & importXMLFilesTable(11) & ") values ('"
-    
-    insertSQL = insertSQL & listguid & "', '"
-    insertSQL = insertSQL & xmlversion & "', '"
-    insertSQL = insertSQL & actNumber & "', '"
-    insertSQL = insertSQL & reassessmentcode & "', '"
-    insertSQL = insertSQL & transmittalletter & "', '"
-    insertSQL = insertSQL & importdate & "', '"
-    insertSQL = insertSQL & formdate & "', "
-    insertSQL = insertSQL & list_id & ", "
-    insertSQL = insertSQL & regi_id & ", "
-    insertSQL = insertSQL & real_id & ", "
-    insertSQL = insertSQL & ctgr_id & ", '"
-    insertSQL = insertSQL & importXMLFilesUserName & "');"
-    
-    cadastrDB.Execute insertSQL
+    sqlStr = "insert into " & importXMLTable & " ("
+    For i = 0 To 10
+        sqlStr = sqlStr & importXMLFilesTable(i) & ","
+    Next i
+    sqlStr = sqlStr & importXMLFilesTable(11) & ") values ('"
+    sqlStr = sqlStr & listguid & "', '"
+    sqlStr = sqlStr & xmlversion & "', '"
+    sqlStr = sqlStr & actNumber & "', '"
+    sqlStr = sqlStr & reassessmentcode & "', '"
+    sqlStr = sqlStr & transmittalletter & "', '"
+    sqlStr = sqlStr & importdate & "', '"
+    sqlStr = sqlStr & formdate & "', "
+    sqlStr = sqlStr & list_id & ", "
+    sqlStr = sqlStr & regi_id & ", "
+    sqlStr = sqlStr & real_id & ", "
+    sqlStr = sqlStr & ctgr_id & ", '"
+    sqlStr = sqlStr & importXMLFilesUserName & "');"
+
+    cadastrDB.Execute sqlStr
     'Получаем id в таблице импортируемых XML
-    selectSQL = "select xmlf_id from " & importXMLTable & " where listguid='" & listguid & "';"
-    Set rs = cadastrDB.OpenRecordset(selectSQL)
+    sqlStr = "select xmlf_id from " & importXMLTable & " where listguid='" & listguid & "';"
+    Set rs = cadastrDB.OpenRecordset(sqlStr)
     If rs.RecordCount = 1 Then
-        'Данные с GUID из файла уже были добавлены в БД. Либо их удаляем, либо выходим
-        'Передернем recordset на всякий пожарный случай
-        rs.MoveLast
-        rs.MoveFirst
-        xmlf_id = rs.Fields.Item(0).Value
+        xmlf_id = rs.Fields("xmlf_id").Value
     Else
         'В смысле нет GUID? Выводим сообщение об ошибке
         MsgBox ("Ошибка. Не смог добавить информацию о XML файле в таблицу")
         ParseXML_051 = False
         Exit Function
     End If
-
+    Set rs = Nothing
+    Set cadastrDB = Nothing
+    
     Set rootNodeChild = rootNodeChild.NextSibling
     'Переходим к парсингу объектов Objects
 
@@ -273,7 +264,7 @@ Private Function ParseXML_051(ByVal importFilePath As String, Optional ByVal act
             Wend
         End If
         If objectsNode.NodeName = "Constructions" Then
-            'Парсим здания
+            'Парсим сооружения
             Set constructionsNode = objectsNode.FirstChild
             While (Not constructionsNode Is Nothing)
                 'Парсим каждый объект
@@ -281,9 +272,35 @@ Private Function ParseXML_051(ByVal importFilePath As String, Optional ByVal act
                 Set constructionsNode = constructionsNode.NextSibling
             Wend
         End If
+        If objectsNode.NodeName = "Flats" Then
+            'Парсим помещения
+            Set flatsNode = objectsNode.FirstChild
+            While (Not flatsNode Is Nothing)
+                'Парсим каждый объект
+                a = ParsXMLFlat051("public_import_t_flats", "xmlf_id", xmlf_id, flatsNode)
+                Set flatsNode = flatsNode.NextSibling
+            Wend
+        End If
+        If objectsNode.NodeName = "Uncompleteds" Then
+            'Парсим недострой
+            Set ucmpNode = objectsNode.FirstChild
+            While (Not ucmpNode Is Nothing)
+                'Парсим каждый объект
+                a = ParsXMLUcmp051("public_import_t_uncompleted", "xmlf_id", xmlf_id, ucmpNode)
+                Set ucmpNode = ucmpNode.NextSibling
+            Wend
+        End If
+        If objectsNode.NodeName = "CarParkingSpaces" Then
+            'Парсим парковки
+            Set carsNode = objectsNode.FirstChild
+            While (Not carsNode Is Nothing)
+                'Парсим каждый объект
+                a = ParsXMLCars051("public_import_t_cars", "xmlf_id", xmlf_id, carsNode)
+                Set carsNode = carsNode.NextSibling
+            Wend
+        End If
         'Парсим дальше объекты
         Set objectsNode = objectsNode.NextSibling
     Wend
-    cadastrDB.Close
     ParseXML_051 = True
 End Function

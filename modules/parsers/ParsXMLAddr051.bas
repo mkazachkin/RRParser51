@@ -93,13 +93,13 @@ Public Function ParsXMLAddr051(ByVal addrNode As Object) As String
     Set rs = insertDB.OpenRecordset(sqlStr)
     If (rs.RecordCount = 0) Then
         'Зарезервируем и получим id будущей записи
-        addr_id = ReserveID(tblName, "addr_id")
+        addr_id = ReserveID(tblName, "addr_id", addrDBValues(32))
         addrDBValues(33) = "null"
         'Готовим запрос на добавление данных
         sqlStr = "update " & tblName & " set "
         For i = 0 To 32
             If addrDBTypes(i) Then addrDBValues(i) = "{$}" & addrDBValues(i) & "{$}"
-            if (i < 32) Then addrDBValues(i) = addrDBValues(i) & ","
+            If (i < 32) Then addrDBValues(i) = addrDBValues(i) & ","
             sqlStr = sqlStr & addrDBFields(i) & "=" & addrDBValues(i)
         Next i
         sqlStr = sqlStr & " where addr_id = " & addr_id & ";"

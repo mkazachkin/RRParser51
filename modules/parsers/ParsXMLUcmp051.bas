@@ -55,9 +55,9 @@ Public Function ParsXMLUcmp051(ByVal tblName As String, ByVal tblKeyName As Stri
         If (ucmpChild.NodeName = ucmpXMLTags(7)) Then ucmpDBValues(7) = ucmpChild.Text
         'Парсим типы
         If (ucmpChild.NodeName = ucmpXMLTags(8)) Then ucmpDBValues(8) = ParsXMLKeyp051(tblName & "_keyp", "ucmp_id", ucmp_id, cadNum, ucmpChild)
-        If (consChild.NodeName = ucmpXMLTags(9)) Then ucmpDBValues(9) = ParsXMLNums051(tblName & "_prnt", "ucmp_id", ucmp_id, cadNum, consChild)
-        If (consChild.NodeName = ucmpXMLTags(10)) Then ucmpDBValues(10) = ParsXMLNums051(tblName & "_prev", "ucmp_id", ucmp_id, cadNum, consChild)
-        If (builChild.NodeName = builXMLTags(11)) Then builDBValues(11) = ParsXMLAddr051(ucmpChild)
+        If (ucmpChild.NodeName = ucmpXMLTags(9)) Then ucmpDBValues(9) = ParsXMLNums051(tblName & "_prnt", "ucmp_id", ucmp_id, cadNum, consChild)
+        If (ucmpChild.NodeName = ucmpXMLTags(10)) Then ucmpDBValues(10) = ParsXMLNums051(tblName & "_prev", "ucmp_id", ucmp_id, cadNum, consChild)
+        If (ucmpChild.NodeName = ucmpXMLTags(11)) Then ucmpDBValues(11) = ParsXMLAddr051(ucmpChild)
         If (ucmpChild.NodeName = ucmpXMLTags(12)) Then ucmpDBValues(12) = ParsXMLCost051(tblName & "_cost", "ucmp_id", ucmp_id, cadNum, ucmpChild)
         If (ucmpChild.NodeName = ucmpXMLTags(13)) Then ucmpDBValues(13) = ParsXMLFacl051(tblName & "_facl", "ucmp_id", ucmp_id, cadNum, ucmpChild)
 

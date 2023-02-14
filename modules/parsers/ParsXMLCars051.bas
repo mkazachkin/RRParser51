@@ -58,7 +58,7 @@ Public Function ParsXMLCars051(ByVal tblName As String, ByVal tblKeyName As Stri
         If (carsChild.NodeName = carsXMLTags(9)) Then carsDBValues(9) = ParsXMLNums051(tblName & "_prev", "cars_id", cars_id, cadNum, carsChild)
         If (carsChild.NodeName = carsXMLTags(10)) Then carsDBValues(10) = ParsXMLPstn051(tblName & "_pstn", "cars_id", cars_id, cadNum, carsChild)
         If (carsChild.NodeName = carsXMLTags(11)) Then carsDBValues(11) = ParsXMLFacl051(tblName & "_unit", "cars_id", cars_id, cadNum, carsChild)
-        If (builChild.NodeName = builXMLTags(12)) Then builDBValues(12) = ParsXMLAddr051(carsChild)
+        If (carsChild.NodeName = carsXMLTags(12)) Then carsDBValues(12) = ParsXMLAddr051(carsChild)
         If (carsChild.NodeName = carsXMLTags(13)) Then carsDBValues(13) = ParsXMLCost051(tblName & "_cost", "cars_id", cars_id, cadNum, carsChild)
         If (carsChild.NodeName = carsXMLTags(14)) Then carsDBValues(14) = ParsXMLFacl051(tblName & "_facl", "cars_id", cars_id, cadNum, carsChild)
 
@@ -83,3 +83,4 @@ Public Function ParsXMLCars051(ByVal tblName As String, ByVal tblKeyName As Stri
     Set insertDB = Nothing
     ParsXMLCars051 = "+"
 End Function
+

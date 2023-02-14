@@ -2,7 +2,6 @@ Option Compare Database
 Public Function GetUcmpConfig051(xmlOrdb As Boolean) As Variant
     Dim conf0(15) As Variant
     Dim conf1(15) As Variant
-    'XML теги                                           'Поля в БД
     conf0(0) = "CadastralNumber":                       conf1(0) = "CadastralNumber"
     conf0(1) = "DateCreated":                           conf1(1) = "DatesCreated"
     conf0(2) = "FoundationDate":                        conf1(2) = "FoundationDates"
@@ -24,15 +23,12 @@ End Function
 Public Function GetUcmpTypes051() As Variant
     Dim conf(15) As Variant
     Dim i As Integer
-    'Все строки
     For i = 0 To 15
         conf(i) = True
     Next i
-    'Исключая addr_id
     conf(11) = False
-    'Исключая id
     conf(14) = False
-    'Исключая Reserved
     conf(15) = False
     GetUcmpTypes051 = conf
 End Function
+

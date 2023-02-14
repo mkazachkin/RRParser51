@@ -89,7 +89,7 @@ Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As Stri
     sqlStr = "update " & tblName & " set "
     For i = 0 To 25
         If builDBTypes(i) Then builDBValues(i) = "{$}" & builDBValues(i) & "{$}"
-        if (i < 25) Then builDBValues(i) = builDBValues(i) & ","
+        If (i < 25) Then builDBValues(i) = builDBValues(i) & ","
         sqlStr = sqlStr & builDBFields(i) & "=" & builDBValues(i)
     Next i
     sqlStr = sqlStr & " where buil_id = " & buil_id & ";"
