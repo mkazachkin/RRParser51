@@ -39,7 +39,6 @@ Public Function ParsXMLSubb051(ByVal tblName As String, ByVal tblKeyName As Stri
         subbDBValues(3) = ""
         subbDBValues(4) = tblKeyValue
         subbDBValues(5) = cadNum
-        subbDBValues(6) = "null"
         If builChild.getAttribute("NumberRecord") <> nill Then subbDBValues(0) = builChild.getAttribute("NumberRecord")
         If builChild.getAttribute("DateCreated") <> nill Then subbDBValues(1) = builChild.getAttribute("DateCreated")
         'Парсим

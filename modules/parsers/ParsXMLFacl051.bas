@@ -29,7 +29,7 @@ Public Function ParsXMLFacl051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' ----- Парсинг -----
     ' -------------------
     faclDBValues(3) = tblKeyValue & ","
-    faclDBValues(4) = "{$}" & cadNum & "{$});"
+    faclDBValues(4) = "{$}" & cadNum & "{$},"
     Set faclChild = faclNode.FirstChild
     While (Not faclChild Is Nothing)
         If faclChild.NodeName = faclXMLTags(0) Then faclDBValues(0) = "({$}" & faclChild.Text & "{$},"
@@ -37,9 +37,9 @@ Public Function ParsXMLFacl051(ByVal tblName As String, ByVal tblKeyName As Stri
         If faclChild.NodeName = faclXMLTags(2) Then faclDBValues(2) = "{$}" & faclChild.Text & "{$},"
         Set faclChild = faclChild.NextSibling
     Wend
-    sqlStr = "insert into " & tblName & "(" & faclDBFields(0) & "," & faclDBFields(1) & "," & faclDBFields(2) & "," & faclDBFields(3) & "," & faclDBFields(4) & ")"
+    sqlStr = "insert into " & tblName & "(" & faclDBFields(0) & "," & faclDBFields(1) & "," & faclDBFields(2) & "," & faclDBFields(3) & "," & faclDBFields(4) & "," & faclDBFields(5) & ")"
     sqlStr = sqlStr & " values "
-    sqlStr = sqlStr & faclDBValues(0) & faclDBValues(1) & faclDBValues(2) & faclDBValues(3) & faclDBValues(4)
+    sqlStr = sqlStr & faclDBValues(0) & faclDBValues(1) & faclDBValues(2) & faclDBValues(3) & faclDBValues(4) & "{$}" & SHA256(CStr(Rnd) + CStr(Now) + CStr(Timer) + CStr(Rnd)) & "{$});"
     sqlStr = PrepareInsertSQL(sqlStr)
     Set insertDB = CurrentDb
     insertDB.Execute sqlStr

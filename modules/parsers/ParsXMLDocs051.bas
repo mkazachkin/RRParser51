@@ -32,7 +32,6 @@ Public Function ParsXMLDocs051(ByVal tblName As String, ByVal tblKeyName As Stri
     docsDBValues(8) = cadNum
     'Зарезервируем и получим id будущей записи
     docs_id = ReserveID(tblName, "docs_id")
-    docsDBValues(9) = "null"
     'Парсим
     Set docsChild = docsNode.FirstChild
     While (Not docsChild Is Nothing)

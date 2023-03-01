@@ -22,9 +22,9 @@ Public Function ParsXMLPerm051(ByVal tblName As String, ByVal tblKeyName As Stri
     Set insertDB = CurrentDb
     While (Not permChild Is Nothing)
         'Это просто список. Поэтому каждую запись сразу пишем в БД с привязкой к основному объекту
-        sqlStr = "insert into " & tblName & "(" & pDBFields(0) & "," & pDBFields(1) & "," & pDBFields(2)
+        sqlStr = "insert into " & tblName & "(" & pDBFields(0) & "," & pDBFields(1) & "," & pDBFields(2) & "," & pDBFields(3)
         sqlStr = sqlStr & ") values ("
-        sqlStr = sqlStr & "'" & permChild.Text & "'," & tblKeyValue & ",'" & cadNum & "');"
+        sqlStr = sqlStr & "'" & permChild.Text & "'," & tblKeyValue & ",'" & cadNum & "','" & SHA256(CStr(Rnd) + CStr(Now) + CStr(Timer) + CStr(Rnd)) & "');"
         insertDB.Execute sqlStr
         Set permChild = permChild.NextSibling
     Wend

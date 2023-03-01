@@ -107,19 +107,19 @@ Private Function ParseXML_051(ByVal importFilePath As String, Optional ByVal act
     'Таблицы словарей
     Dim dictRealty(2) As String
     dictRealty(0) = "RealtyCode"
-    dictRealty(1) = "public_import_dict_realty"
+    dictRealty(1) = "public_dict_realty"
     dictRealty(2) = "real_id"
     Dim dictList(2) As String
     dictList(0) = "ListCode"
-    dictList(1) = "public_import_dict_list"
+    dictList(1) = "public_dict_list"
     dictList(2) = "list_id"
     Dim dictRegi(2) As String
     dictRegi(0) = "RegionCode"
-    dictRegi(1) = "public_import_dict_region"
+    dictRegi(1) = "public_dict_region"
     dictRegi(2) = "regi_id"
     Dim dictCtgr(2) As String
     dictCtgr(0) = "CategoryCode"
-    dictCtgr(1) = "public_import_dict_categories"
+    dictCtgr(1) = "public_dict_categories"
     dictCtgr(2) = "ctgr_id"
     'Служебные переменные
     Dim sqlStr As String
@@ -127,6 +127,7 @@ Private Function ParseXML_051(ByVal importFilePath As String, Optional ByVal act
     Dim xmlf_id As Long
     Dim rs As DAO.Recordset
     Dim i As Integer
+    Dim j As Integer
     Dim tmp As Boolean
     'Переменные для хранения полученных данных XML
     Dim listguid As String
@@ -138,9 +139,11 @@ Private Function ParseXML_051(ByVal importFilePath As String, Optional ByVal act
     Dim ctgr_id As Long
     Dim formdate As String
     Dim importXMLFilesUserName As String
-
+    
+    Dim updStr(6000) As String
+    
     'Дату сразу поставим текущую
-    formdate = Format(Date, "YYYY-mm-dd")
+    formdate = Format(Now, "YYYY-mm-dd")
     'Получаем имя пользователя, который импортирует файлы
     importXMLFilesUserName = LoginUserName()
 
@@ -254,21 +257,14 @@ Private Function ParseXML_051(ByVal importFilePath As String, Optional ByVal act
 
     Set objectsNode = rootNodeChild.FirstChild
     While (Not objectsNode Is Nothing)
-        If objectsNode.NodeName = "Buildings" Then
-            'Парсим здания
-            Set buildingsNode = objectsNode.FirstChild
-            While (Not buildingsNode Is Nothing)
-                'Парсим каждый объект
-                a = ParsXMLBuil051("public_import_t_buildings", "xmlf_id", xmlf_id, buildingsNode)
-                Set buildingsNode = buildingsNode.NextSibling
-            Wend
-        End If
+        i = 0
         If objectsNode.NodeName = "Constructions" Then
             'Парсим сооружения
             Set constructionsNode = objectsNode.FirstChild
             While (Not constructionsNode Is Nothing)
                 'Парсим каждый объект
-                a = ParsXMLCons051("public_import_t_constructions", "xmlf_id", xmlf_id, constructionsNode)
+                updStr(i) = ParsXMLCons051("public_import_t_constructions", "xmlf_id", xmlf_id, constructionsNode)
+                i = i + 1
                 Set constructionsNode = constructionsNode.NextSibling
             Wend
         End If
@@ -277,8 +273,19 @@ Private Function ParseXML_051(ByVal importFilePath As String, Optional ByVal act
             Set flatsNode = objectsNode.FirstChild
             While (Not flatsNode Is Nothing)
                 'Парсим каждый объект
-                a = ParsXMLFlat051("public_import_t_flats", "xmlf_id", xmlf_id, flatsNode)
+                updStr(i) = ParsXMLFlat051("public_import_t_flats", "xmlf_id", xmlf_id, flatsNode)
+                i = i + 1
                 Set flatsNode = flatsNode.NextSibling
+            Wend
+        End If
+        If objectsNode.NodeName = "Buildings" Then
+            'Парсим здания
+            Set buildingsNode = objectsNode.FirstChild
+            While (Not buildingsNode Is Nothing)
+                'Парсим каждый объект
+                updStr(i) = ParsXMLBuil051("public_import_t_buildings", "xmlf_id", xmlf_id, buildingsNode)
+                i = i + 1
+                Set buildingsNode = buildingsNode.NextSibling
             Wend
         End If
         If objectsNode.NodeName = "Uncompleteds" Then
@@ -286,7 +293,8 @@ Private Function ParseXML_051(ByVal importFilePath As String, Optional ByVal act
             Set ucmpNode = objectsNode.FirstChild
             While (Not ucmpNode Is Nothing)
                 'Парсим каждый объект
-                a = ParsXMLUcmp051("public_import_t_uncompleted", "xmlf_id", xmlf_id, ucmpNode)
+                updStr(i) = ParsXMLUcmp051("public_import_t_uncompleted", "xmlf_id", xmlf_id, ucmpNode)
+                i = i + 1
                 Set ucmpNode = ucmpNode.NextSibling
             Wend
         End If
@@ -295,10 +303,16 @@ Private Function ParseXML_051(ByVal importFilePath As String, Optional ByVal act
             Set carsNode = objectsNode.FirstChild
             While (Not carsNode Is Nothing)
                 'Парсим каждый объект
-                a = ParsXMLCars051("public_import_t_cars", "xmlf_id", xmlf_id, carsNode)
+                updStr(i) = ParsXMLCars051("public_import_t_cars", "xmlf_id", xmlf_id, carsNode)
+                i = i + 1
                 Set carsNode = carsNode.NextSibling
             Wend
         End If
+        Set updDb = CurrentDb
+        For j = 0 To i - 1
+            updDb.Execute updStr(j)
+        Next j
+        Set updDb = Nothing
         'Парсим дальше объекты
         Set objectsNode = objectsNode.NextSibling
     Wend

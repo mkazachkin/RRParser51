@@ -31,7 +31,6 @@ Public Function ParsXMLCult051(ByVal tblName As String, ByVal tblKeyName As Stri
     cultDBValues(9) = cadNum
     'Зарезервируем и получим id будущей записи
     cult_id = ReserveID(tblName, "cult_id")
-    cultDBValues(10) = "null"
     Set cultNode = cultNode.FirstChild
     While (Not cultNode Is Nothing)
         If cultNode.NodeName = "InclusionEGROKN" Then
@@ -73,3 +72,4 @@ Public Function ParsXMLCult051(ByVal tblName As String, ByVal tblKeyName As Stri
     Set insertDB = Nothing
     ParsXMLCult051 = "+"
 End Function
+

@@ -33,7 +33,6 @@ Public Function ParsXMLFlat051(ByVal tblName As String, ByVal tblKeyName As Stri
     flatDBValues(22) = tblKeyValue
     'Зарезервируем и получим id будущей записи
     flat_id = ReserveID(tblName, "flat_id")
-    flatDBValues(23) = "null"
     'В качестве атрибутов узла приходят еще несколько полей
     If flatNode.getAttribute(flatXMLTags(0)) <> nill Then
         flatDBValues(0) = flatNode.getAttribute(flatXMLTags(0))
@@ -88,8 +87,5 @@ Public Function ParsXMLFlat051(ByVal tblName As String, ByVal tblKeyName As Stri
     Next i
     sqlStr = sqlStr & " where flat_id = " & flat_id & ";"
     sqlStr = PrepareInsertSQL(sqlStr)
-    Set insertDB = CurrentDb
-    insertDB.Execute sqlStr
-    Set insertDB = Nothing
-    ParsXMLFlat051 = "+"
+    ParsXMLFlat051 = sqlStr
 End Function

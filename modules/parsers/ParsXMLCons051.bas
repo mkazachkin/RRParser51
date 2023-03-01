@@ -33,7 +33,6 @@ Public Function ParsXMLCons051(ByVal tblName As String, ByVal tblKeyName As Stri
     consDBValues(24) = tblKeyValue
     'Зарезервируем и получим id будущей записи
     cons_id = ReserveID(tblName, "cons_id")
-    consDBValues(25) = "null"
     'В качестве атрибутов узла приходят еще несколько полей
     If consNode.getAttribute(consXMLTags(0)) <> nill Then
         consDBValues(0) = consNode.getAttribute(consXMLTags(0))
@@ -90,8 +89,6 @@ Public Function ParsXMLCons051(ByVal tblName As String, ByVal tblKeyName As Stri
     Next i
     sqlStr = sqlStr & " where cons_id = " & cons_id & ";"
     sqlStr = PrepareInsertSQL(sqlStr)
-    Set insertDB = CurrentDb
-    insertDB.Execute sqlStr
-    Set insertDB = Nothing
-    ParsXMLCons051 = "+"
+    ParsXMLCons051 = sqlStr
 End Function
+

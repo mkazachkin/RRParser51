@@ -33,7 +33,6 @@ Public Function ParsXMLCars051(ByVal tblName As String, ByVal tblKeyName As Stri
     carsDBValues(15) = tblKeyValue
     'Зарезервируем и получим id будущей записи
     cars_id = ReserveID(tblName, "cars_id")
-    carsDBValues(16) = "null"
     'В качестве атрибутов узла приходят еще несколько полей
     If carsNode.getAttribute(carsXMLTags(0)) <> nill Then
         carsDBValues(0) = carsNode.getAttribute(carsXMLTags(0))
@@ -78,9 +77,6 @@ Public Function ParsXMLCars051(ByVal tblName As String, ByVal tblKeyName As Stri
     Next i
     sqlStr = sqlStr & " where cars_id = " & cars_id & ";"
     sqlStr = PrepareInsertSQL(sqlStr)
-    Set insertDB = CurrentDb
-    insertDB.Execute sqlStr
-    Set insertDB = Nothing
-    ParsXMLCars051 = "+"
+    ParsXMLCars051 = sqlStr
 End Function
 

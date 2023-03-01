@@ -40,7 +40,6 @@ Public Function ParsXMLSubc051(ByVal tblName As String, ByVal tblKeyName As Stri
         subcDBValues(4) = ""
         subcDBValues(5) = tblKeyValue
         subcDBValues(6) = cadNum
-        subcDBValues(7) = "null"
         If subcNode.getAttribute("NumberRecord") <> nill Then subcDBValues(0) = subcNode.getAttribute("NumberRecord")
         If subcNode.getAttribute("DateCreated") <> nill Then subcDBValues(1) = subcNode.getAttribute("DateCreated")
         'Парсим

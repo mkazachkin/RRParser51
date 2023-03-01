@@ -32,7 +32,6 @@ Public Function ParsXMLCost051(ByVal tblName As String, ByVal tblKeyName As Stri
     cdcsDBValues(9) = cadNum
     'Зарезервируем и получим id будущей записи
     cdcs_id = ReserveID(tblName, "cdcs_id")
-    cdcsDBValues(10) = "null"
     'Кадастровая стоимость тоже приходит "снаружи"
     If costNode.getAttribute("Value") <> nill Then
         cdcsDBValues(0) = Replace(costNode.getAttribute("Value"), ".", ",")
@@ -66,3 +65,4 @@ Public Function ParsXMLCost051(ByVal tblName As String, ByVal tblKeyName As Stri
     Set insertDB = Nothing
     ParsXMLCost051 = "+"
 End Function
+

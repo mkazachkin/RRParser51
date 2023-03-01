@@ -38,7 +38,6 @@ Public Function ParsXMLEnbr051(ByVal tblName As String, ByVal tblKeyName As Stri
         enbrDBValues(4) = ""
         enbrDBValues(5) = tblKeyValue
         enbrDBValues(6) = cadNum
-        enbrDBValues(7) = "null"
         'Парсим
         Set enbrChild = enbrNode.FirstChild
         While (Not enbrChild Is Nothing)

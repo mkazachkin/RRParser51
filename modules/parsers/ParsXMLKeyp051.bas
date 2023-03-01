@@ -28,9 +28,9 @@ Public Function ParsXMLKeyp051(ByVal tblName As String, ByVal tblKeyName As Stri
     While (Not keypChild Is Nothing)
         If keypChild.getAttribute("Type") <> nill Then keypType = keypChild.getAttribute("Type")
         If keypChild.getAttribute("Value") <> nill Then keypValue = Replace(keypChild.getAttribute("Value"), ".", ",")
-        insertSQL = "insert into " & tblName & "(" & numsDBFields(0) & "," & numsDBFields(1) & "," & numsDBFields(2) & "," & numsDBFields(3)
+        insertSQL = "insert into " & tblName & "(" & numsDBFields(0) & "," & numsDBFields(1) & "," & numsDBFields(2) & "," & numsDBFields(3) & "," & numsDBFields(4)
         insertSQL = insertSQL & ") values ("
-        insertSQL = insertSQL & "'" & keypType & "','" & keypValue & "'," & tblKeyValue & ",'" & cadNum & "');"
+        insertSQL = insertSQL & "'" & keypType & "','" & keypValue & "'," & tblKeyValue & ",'" & cadNum & "','" & SHA256(CStr(Rnd) + CStr(Now) + CStr(Timer) + CStr(Rnd)) & "');"
         insertDB.Execute insertSQL
         keypType = ""
         keypValue = ""

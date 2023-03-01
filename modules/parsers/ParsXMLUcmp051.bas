@@ -33,7 +33,6 @@ Public Function ParsXMLUcmp051(ByVal tblName As String, ByVal tblKeyName As Stri
     ucmpDBValues(14) = tblKeyValue
     'Зарезервируем и получим id будущей записи
     ucmp_id = ReserveID(tblName, "ucmp_id")
-    ucmpDBValues(15) = "null"
     'В качестве атрибутов узла приходят еще несколько полей
     If ucmpNode.getAttribute(ucmpXMLTags(0)) <> nill Then
         ucmpDBValues(0) = ucmpNode.getAttribute(ucmpXMLTags(0))
@@ -75,8 +74,5 @@ Public Function ParsXMLUcmp051(ByVal tblName As String, ByVal tblKeyName As Stri
     Next i
     sqlStr = sqlStr & " where ucmp_id = " & ucmp_id & ";"
     sqlStr = PrepareInsertSQL(sqlStr)
-    Set insertDB = CurrentDb
-    insertDB.Execute sqlStr
-    Set insertDB = Nothing
-    ParsXMLUcmp051 = "+"
+    ParsXMLUcmp051 = sqlStr
 End Function

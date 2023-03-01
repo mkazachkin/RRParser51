@@ -63,43 +63,22 @@ Public Function PrepareInsertSQL(sqlString As String) As String
     sqlString = Replace(sqlString, "{$}", "'")
     PrepareInsertSQL = sqlString
 End Function
-Public Function ReserveID(tblName As String, keyField As String, Optional sha256hash As String) As String
+Public Function ReserveID(tblName As String, keyField As String) As String
     Dim result As String
     Randomize
     Dim guid As String
-    guid = SHA256(CStr(Rnd) + Now + CStr(Rnd))
-    If sha256hash = "" Then
-        strSQL = "insert into " & tblName & "(reserved) values ('" & guid & "');"
-    Else
-        strSQL = "insert into " & tblName & "(reserved, sha256hash) values ('" & guid & "','" & sha256hash & "');"
-    End If
+    guid = SHA256(CStr(Rnd) + CStr(Now) + CStr(Timer) + CStr(Rnd))
+    strSQL = "insert into " & tblName & "(reserved) values ('" & guid & "');"
     Set reserveDB = CurrentDb
     reserveDB.Execute strSQL
     strSQL = "select " & keyField & " from " & tblName & " where reserved ='" & guid & "';"
     Set rs = reserveDB.OpenRecordset(strSQL)
     result = CStr(rs.Fields(keyField).Value)
-    strSQL = "update " & tblName & " set reserved = null where reserved ='" & guid & "';"
-    reserveDB.Execute strSQL
+
     Set rs = Nothing
     Set insertDB = Nothing
     ReserveID = result
 End Function
-'Public Function ReserveID(tblName As String, keyField As String) As String
-'    Dim result As String
-'    Randomize
-'    Dim timestamp As String
-'    strSQL = "insert into " & tblName & "(reserved) values ('+');"
-'    Set reserveDB = CurrentDb
-'    reserveDB.Execute strSQL
-'    strSQL = "select " & keyField & " from " & tblName & " where reserved is not null;"
-'    Set rs = reserveDB.OpenRecordset(strSQL)
-'    result = CStr(rs.Fields(keyField).Value)
-'    strSQL = "update " & tblName & " set reserved = null where reserved is not null;"
-'    reserveDB.Execute strSQL
-'    Set rs = Nothing
-'    Set insertDB = Nothing
-'    ReserveID = result
-'End Function
 Public Function ClearObjTable(objType As String, xmlf_id As Long) As Boolean
     'Список таблиц
     Dim tbl(14, 4) As String
@@ -213,3 +192,20 @@ Public Function ClearObjTable(objType As String, xmlf_id As Long) As Boolean
     Set dRs = Nothing
     ClearObjTable = flag
 End Function
+Public Sub SetReserveID()
+    Dim tblName As String
+    Dim tblKey As String
+    
+    tblName = "public_import_t_cars"
+    tblKey = "cars_id"
+    
+    Randomize
+
+    sqlStr = "select " & tblKey & " from " & tblName & ";"
+    Set rs = CurrentDb.OpenRecordset(sqlStr)
+    If (Not rs.EOF) Then rs.MoveFirst
+    While (Not rs.EOF)
+        CurrentDb.Execute "update " & tblName & " set reserved='" & SHA256(CStr(Rnd) + CStr(Now) + CStr(Timer) + CStr(Rnd)) & "' where " & tblKey & "=" & rs.Fields(tblKey).Value & ";"
+        rs.MoveNext
+    Wend
+End Sub

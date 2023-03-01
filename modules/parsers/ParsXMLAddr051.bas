@@ -22,7 +22,7 @@ Public Function ParsXMLAddr051(ByVal addrNode As Object) As String
     'Задаем параметры словаря регионов
     Dim dictRegi(2) As String
         dictRegi(0) = "RegionCode"
-        dictRegi(1) = "public_import_dict_region"
+        dictRegi(1) = "public_dict_region"
         dictRegi(2) = "regi_id"
     'Служебное
     Dim i As Integer
@@ -93,7 +93,7 @@ Public Function ParsXMLAddr051(ByVal addrNode As Object) As String
     Set rs = insertDB.OpenRecordset(sqlStr)
     If (rs.RecordCount = 0) Then
         'Зарезервируем и получим id будущей записи
-        addr_id = ReserveID(tblName, "addr_id", addrDBValues(32))
+        addr_id = ReserveID(tblName, "addr_id")
         addrDBValues(33) = "null"
         'Готовим запрос на добавление данных
         sqlStr = "update " & tblName & " set "

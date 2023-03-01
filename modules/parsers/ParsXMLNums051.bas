@@ -22,9 +22,9 @@ Public Function ParsXMLNums051(ByVal tblName As String, ByVal tblKeyName As Stri
     Set insertDB = CurrentDb
     While (Not numsChild Is Nothing)
         'Это просто список. Поэтому каждую запись сразу пишем в БД с привязкой к основному объектукту
-        sqlStr = "insert into " & tblName & "(" & nDBFields(0) & "," & nDBFields(1) & "," & nDBFields(2)
+        sqlStr = "insert into " & tblName & "(" & nDBFields(0) & "," & nDBFields(1) & "," & nDBFields(2) & "," & nDBFields(3)
         sqlStr = sqlStr & ") values ("
-        sqlStr = sqlStr & "'" & numsChild.Text & "'," & tblKeyValue & ",'" & cadNum & "');"
+        sqlStr = sqlStr & "'" & numsChild.Text & "'," & tblKeyValue & ",'" & cadNum & "','" & SHA256(CStr(Rnd) + CStr(Now) + CStr(Timer) + CStr(Rnd)) & "');"
         insertDB.Execute sqlStr
         Set numsChild = numsChild.NextSibling
     Wend

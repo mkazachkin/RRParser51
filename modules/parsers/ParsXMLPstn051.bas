@@ -29,7 +29,6 @@ Public Function ParsXMLPstn051(ByVal tblName As String, ByVal tblKeyName As Stri
     pstnDBValues(5) = cadNum
     'Зарезервируем и получим id будущей записи
     pstn_id = ReserveID(tblName, "pstn_id")
-    pstnDBValues(6) = "null"
     'Парсим
     Set pstnChild = pstnNode.FirstChild
     While (Not pstnChild Is Nothing)

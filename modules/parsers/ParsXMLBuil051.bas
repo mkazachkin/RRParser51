@@ -33,7 +33,6 @@ Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As Stri
     builDBValues(25) = tblKeyValue
     'Зарезервируем и получим id будущей записи
     buil_id = ReserveID(tblName, "buil_id")
-    builDBValues(26) = "null"
     'В качестве атрибутов узла приходят еще несколько полей
     If builNode.getAttribute(builXMLTags(0)) <> nill Then
         builDBValues(0) = builNode.getAttribute(builXMLTags(0))
@@ -53,19 +52,15 @@ Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As Stri
         Next i
         'Парсим атрибуты
         If (builChild.NodeName = builXMLTags(9)) Then
-            Set child = builChild.FirstChild
-            If child.getAttribute("Wall") <> nill Then builDBValues(9) = child.getAttribute("Wall")
-            Set child = Nothing
+            If builChild.getAttribute("YearBuilt") <> nill Then builDBValues(9) = builChild.getAttribute("YearBuilt")
+            If builChild.getAttribute("YearUsed") <> nill Then builDBValues(10) = builChild.getAttribute("YearUsed")
         End If
-        If (builChild.NodeName = builXMLTags(10)) Then
-            If builChild.getAttribute("YearBuilt") <> nill Then builDBValues(10) = builChild.getAttribute("YearBuilt")
-            If builChild.getAttribute("YearUsed") <> nill Then builDBValues(11) = builChild.getAttribute("YearUsed")
-        End If
-        If (builChild.NodeName = builXMLTags(12)) Then
-            If builChild.getAttribute("Floors") <> nill Then builDBValues(12) = builChild.getAttribute("Floors")
-            If builChild.getAttribute("UndergroundFloors") <> nill Then builDBValues(13) = builChild.getAttribute("UndergroundFloors")
+        If (builChild.NodeName = builXMLTags(11)) Then
+            If builChild.getAttribute("Floors") <> nill Then builDBValues(11) = builChild.getAttribute("Floors")
+            If builChild.getAttribute("UndergroundFloors") <> nill Then builDBValues(12) = builChild.getAttribute("UndergroundFloors")
         End If
         'Парсим типы
+        If (builChild.NodeName = builXMLTags(13)) Then builDBValues(13) = ParsXMLWall051(tblName & "_wall", "buil_id", buil_id, cadNum, builChild)
         If (builChild.NodeName = builXMLTags(14)) Then builDBValues(14) = ParsXMLNums051(tblName & "_prnt", "buil_id", buil_id, cadNum, builChild)
         If (builChild.NodeName = builXMLTags(15)) Then builDBValues(15) = ParsXMLNums051(tblName & "_prev", "buil_id", buil_id, cadNum, builChild)
         If (builChild.NodeName = builXMLTags(16)) Then builDBValues(16) = ParsXMLNums051(tblName & "_flat", "buil_id", buil_id, cadNum, builChild)
@@ -94,8 +89,6 @@ Public Function ParsXMLBuil051(ByVal tblName As String, ByVal tblKeyName As Stri
     Next i
     sqlStr = sqlStr & " where buil_id = " & buil_id & ";"
     sqlStr = PrepareInsertSQL(sqlStr)
-    Set insertDB = CurrentDb
-    insertDB.Execute sqlStr
-    Set insertDB = Nothing
-    ParsXMLBuil051 = "+"
+    ParsXMLBuil051 = sqlStr
 End Function
+

@@ -32,7 +32,6 @@ Public Function ParsXMLAsgn051(ByVal tblName As String, ByVal tblKeyName As Stri
     asgnDBValues(6) = cadNum
     'Зарезервируем и получим id будущей записи
     asgn_id = ReserveID(tblName, "asgn_id")
-    asgnDBValues(7) = "null"
     'Парсим
     Set asgnChild = asgnNode.FirstChild
     While (Not asgnChild Is Nothing)
@@ -46,9 +45,9 @@ Public Function ParsXMLAsgn051(ByVal tblName As String, ByVal tblKeyName As Stri
     ' -----------------------
     'Обрабатываем строки в данных
     sqlStr = "update " & tblName & " set "
-    For i = 0 To 7
+    For i = 0 To 6
         If asgnDBTypes(i) Then asgnDBValues(i) = "{$}" & asgnDBValues(i) & "{$}"
-        If (i < 7) Then asgnDBValues(i) = asgnDBValues(i) & ","
+        If (i < 6) Then asgnDBValues(i) = asgnDBValues(i) & ","
         sqlStr = sqlStr & asgnDBFields(i) & "=" & asgnDBValues(i)
     Next i
     sqlStr = sqlStr & " where asgn_id = " & asgn_id & ";"
